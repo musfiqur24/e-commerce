@@ -21,11 +21,15 @@ export default function OrdersPage() {
     async function fetchOrders() {
       try {
         const res = await fetch('/api/orders')
-        if (!res.ok) throw new Error('Failed to load orders')
+        if (!res.ok) {
+          setOrders([])
+          return
+        }
         const data = await res.json()
-        setOrders(data.orders)
+        setOrders(data.orders || [])
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Something went wrong')
+        console.warn('Could not load orders:', err)
+        setOrders([])
       } finally {
         setLoading(false)
       }
@@ -60,7 +64,7 @@ export default function OrdersPage() {
         { label: 'Orders' },
       ]}
     >
-      <div className="space-y-4 md:space-y-6">
+      <div className="space-y-4">
         <TopImageBanner title="Orders" />
 
         <Card
@@ -78,8 +82,13 @@ export default function OrdersPage() {
                 layout="list"
                 message="Loading orders..."
               />
-            ) : error ? (
-              <div className="text-center py-12 text-sm text-red-500">{error}</div>
+            ) : orders.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <p className="text-sm font-medium text-neutral-800">No orders yet</p>
+                <p className="mt-1 text-xs text-neutral-500">
+                  You haven&apos;t placed any orders yet.
+                </p>
+              </div>
             ) : filteredOrders.length > 0 ? (
               filteredOrders.map((order) => (
                 <OrderCard key={order.id} order={order} defaultExpanded={false} />

@@ -85,17 +85,16 @@ function SidebarContent({
             {logoSrc ? (
               <Image
                 src={logoSrc}
-                alt="Protocol"
-                width={36}
-                height={36}
+                alt="Posora"
+                width={32}
+                height={32}
                 priority
-                className="h-8 w-auto max-h-8 max-w-[140px] object-contain"
+                className="h-7 w-auto max-h-7 object-contain"
               />
-            ) : (
-              <span className="text-[13px] font-bold tracking-widest text-[#1c1c1c] uppercase">
-                PROTOCOL™
-              </span>
-            )}
+            ) : null}
+            <span className="text-[15px] font-semibold tracking-tight text-[#1c1c1c]">
+              Posora
+            </span>
           </Link>
 
           {onClose && (
@@ -278,16 +277,15 @@ export default function Sidebar({
           {logoSrc ? (
             <Image
               src={logoSrc}
-              alt="Protocol"
-              width={28}
-              height={28}
-              className="h-6 w-auto max-h-6 max-w-[100px] object-contain"
+              alt="Posora"
+              width={26}
+              height={26}
+              className="h-6 w-auto max-h-6 object-contain"
             />
-          ) : (
-            <span className="text-sm font-bold tracking-widest text-neutral-900 uppercase">
-              PROTOCOL™
-            </span>
-          )}
+          ) : null}
+          <span className="text-sm font-semibold tracking-tight text-neutral-900">
+            Posora
+          </span>
         </Link>
       </div>
 

@@ -47,7 +47,6 @@ export default async function DashboardPage() {
   return (
     <PageContainer
       breadcrumb={[{ label: "Dashboard" }]}
-      contentClassName="px-4 pt-4 pb-4 lg:px-6 lg:pt-3"
     >
       <div className="space-y-4">
         {/* Banner — aligned with content */}

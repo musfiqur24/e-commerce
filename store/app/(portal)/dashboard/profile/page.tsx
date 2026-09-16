@@ -123,7 +123,7 @@ export default function ProfilePage() {
 
         <form
           onSubmit={handleSave}
-          className="bg-white border border-neutral-200 rounded-xl px-6 pt-4 pb-8 md:px-16 lg:px-24 md:pt-6 md:pb-10 shadow-sm space-y-6 mt-6"
+          className="bg-white border border-neutral-200 rounded-xl px-6 pt-4 pb-8 md:px-16 lg:px-24 md:pt-6 md:pb-10 shadow-sm space-y-6"
         >
           {/* Personal Details */}
           <div className="bg-neutral-100 border border-neutral-100 rounded-xl p-5">

@@ -9,6 +9,5 @@ README.md
 .env.local
 .env.development
 .env.production
-.env.example
 
 npm-debug.log

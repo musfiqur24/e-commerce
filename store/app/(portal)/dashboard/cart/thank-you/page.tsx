@@ -15,7 +15,7 @@ import Card from '@/components/portal/Card'
 import Button from '@/components/portal/Button'
 import { formatAud } from '@/lib/currency'
 
-const CHECKOUT_CONFIRMATION_STORAGE_KEY = 'protocol:last-order-confirmation'
+const CHECKOUT_CONFIRMATION_STORAGE_KEY = 'posora:last-order-confirmation'
 
 interface CheckoutDetails {
   email: string
@@ -101,7 +101,7 @@ export default function CheckoutThankYouPage() {
         { label: 'Thank You' },
       ]}
     >
-      <div className="w-full mx-auto space-y-6 pb-12">
+      <div className="w-full mx-auto space-y-4 pb-8">
         <TopImageBanner title="Thank You" subtitle="Order placed" />
 
         {!confirmation ? (

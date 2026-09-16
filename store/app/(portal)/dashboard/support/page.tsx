@@ -126,41 +126,41 @@ export default function SupportPage() {
       <div className="space-y-4">
         <TopImageBanner title="Support" />
 
-        <div className="flex justify-end">
-          <Button
-            className="bg-brand-primary text-white border-none shadow-none text-xs rounded-lg inline-flex items-center gap-2 px-3 py-2"
-            onClick={handleOpenTicketModal}
-          >
-            <PlusMini className="w-4 h-4" />
-            <span>Create Ticket</span>
-          </Button>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column: Tickets */}
           <div className="lg:col-span-2 space-y-4">
             <Card className="p-4 bg-white border border-neutral-200 rounded-xl">
-              <div className="flex border-b border-neutral-200 mb-4">
-                <button
-                  className={`pb-2 px-4 text-xs font-medium border-b-2 transition-colors ${
-                    activeTab === 'Open'
-                      ? 'border-brand-primary text-brand-primary'
-                      : 'border-transparent text-neutral-500 hover:text-neutral-700'
-                  }`}
-                  onClick={() => setActiveTab('Open')}
+              <div className="flex items-center justify-between border-b border-neutral-200 pb-2 mb-4">
+                <div className="flex items-center gap-1">
+                  <button
+                    className={`pb-2 px-3 text-xs font-medium border-b-2 transition-colors ${
+                      activeTab === 'Open'
+                        ? 'border-neutral-900 text-neutral-900 font-semibold'
+                        : 'border-transparent text-neutral-500 hover:text-neutral-700'
+                    }`}
+                    onClick={() => setActiveTab('Open')}
+                  >
+                    Open Tickets ({tickets.filter((t) => t.status === 'Open').length})
+                  </button>
+                  <button
+                    className={`pb-2 px-3 text-xs font-medium border-b-2 transition-colors ${
+                      activeTab === 'Closed'
+                        ? 'border-neutral-900 text-neutral-900 font-semibold'
+                        : 'border-transparent text-neutral-500 hover:text-neutral-700'
+                    }`}
+                    onClick={() => setActiveTab('Closed')}
+                  >
+                    Closed Tickets ({tickets.filter((t) => t.status === 'Closed').length})
+                  </button>
+                </div>
+
+                <Button
+                  className="bg-neutral-900 hover:bg-black text-white text-xs rounded-lg inline-flex items-center gap-1.5 px-3 py-1.5 shadow-sm transition-colors"
+                  onClick={handleOpenTicketModal}
                 >
-                  Open Tickets ({tickets.filter((t) => t.status === 'Open').length})
-                </button>
-                <button
-                  className={`pb-2 px-4 text-xs font-medium border-b-2 transition-colors ${
-                    activeTab === 'Closed'
-                      ? 'border-brand-primary text-brand-primary'
-                      : 'border-transparent text-neutral-500 hover:text-neutral-700'
-                  }`}
-                  onClick={() => setActiveTab('Closed')}
-                >
-                  Closed Tickets ({tickets.filter((t) => t.status === 'Closed').length})
-                </button>
+                  <PlusMini className="w-3.5 h-3.5" />
+                  <span>Create Ticket</span>
+                </Button>
               </div>
 
               {filteredTickets.length === 0 ? (

@@ -1,4 +1,4 @@
-# Get Protocol Client Portal
+# Posora Client Portal
 
 Next.js patient portal for Clerk auth, Medusa customer/cart data, and HubSpot patient records.
 

@@ -30,7 +30,7 @@ type EwayFieldStatusKey = "name" | "card" | "expirytext" | "cvn";
 type ToastVariant = "info" | "success" | "warning" | "error";
 type CheckoutStep = "cart" | "details" | "review";
 
-const CHECKOUT_CONFIRMATION_STORAGE_KEY = "protocol:last-order-confirmation";
+const CHECKOUT_CONFIRMATION_STORAGE_KEY = "posora:last-order-confirmation";
 
 const checkoutSteps: Array<{
   id: CheckoutStep;
@@ -640,8 +640,9 @@ export default function CartPage() {
         { label: "Cart" },
       ]}
     >
-      <TopImageBanner subtitle="Secure checkout" title=" Complete your order" />
-      <div className="mt-6 mx-auto w-full pb-12 space-y-4">
+      <div className="space-y-4">
+        <TopImageBanner subtitle="Secure checkout" title=" Complete your order" />
+        <div className="mx-auto w-full pb-12 space-y-4">
         <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm">
           <CheckoutProgress
             steps={checkoutSteps}
@@ -852,6 +853,7 @@ export default function CartPage() {
             </aside>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Toast Notification */}

@@ -98,10 +98,10 @@ export async function getAuthenticatedCustomer() {
   const apiKey = process.env.MEDUSA_API_KEY || ''
 
   const res = await fetch(
-    `${backendUrl}/admin/customers?metadata[clerk_user_id]=${userId}`,
+    `${backendUrl}/admin/customers?limit=100`,
     {
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': `Basic ${Buffer.from(`${apiKey}:`).toString('base64')}`,
         'Content-Type': 'application/json',
       },
       cache: 'no-store',
@@ -113,7 +113,11 @@ export async function getAuthenticatedCustomer() {
   }
 
   const data = await res.json()
-  const customer = data?.customers?.[0]
+  const customers = data?.customers || []
+  const customer = customers.find(
+    (c: { id: string; metadata?: Record<string, unknown> }) =>
+      c.metadata?.clerk_user_id === userId
+  )
 
   if (!customer) {
     throw new Error('CUSTOMER_NOT_FOUND')

@@ -161,7 +161,7 @@ export default function MarketplacePage() {
         { label: "Marketplace" },
       ]}
     >
-      <div className="mx-auto w-full space-y-4 md:space-y-6">
+      <div className="mx-auto w-full space-y-4">
         <TopImageBanner title="Marketplace" />
 
         <Card

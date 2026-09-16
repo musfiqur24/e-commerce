@@ -12,10 +12,13 @@ const nbInternational = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Get Protocol — Client Portal",
-  description: "Manage your get protocol journey",
+  title: "Posora — Client Portal",
+  description: "Manage your Posora journey",
   icons: {
-    icon: "/logo.png",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/logo.png" },
+    ],
     shortcut: "/logo.png",
     apple: "/logo.png",
   },
