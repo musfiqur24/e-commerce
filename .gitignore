@@ -1,0 +1,18 @@
+# Postgres data volume — raw binary files, never commit
+postgres_data/
+
+# Local environment files — values go in GitHub Secrets for CI/CD
+.env
+.env.local
+.env.production
+backend/.env
+client-portal/.env
+
+# Claude Code memory
+.claude/
+
+# macOS
+.DS_Store
+
+.kiro
+antigravity

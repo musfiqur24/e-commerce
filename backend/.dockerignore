@@ -1,0 +1,15 @@
+node_modules
+.medusa
+.git
+.gitignore
+Dockerfile
+README.md
+
+.env
+.env.local
+.env.development
+.env.production
+.env.template
+
+npm-debug.log
+scratch_*.ts
