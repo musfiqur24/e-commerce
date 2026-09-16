@@ -915,14 +915,14 @@ function EmptyCartState() {
         Your cart is empty.
       </p>
       <p className="mt-1 max-w-sm text-xs leading-5 text-neutral-500">
-        Browse the marketplace to add approved items before checkout.
+        Browse products to add approved items before checkout.
       </p>
       <Button
         href="/dashboard/marketplace"
         variant="primary"
         className="mt-5 h-10 rounded-md bg-neutral-900 px-5 text-sm text-white"
       >
-        Go to Marketplace
+        Go to Products
       </Button>
     </div>
   );

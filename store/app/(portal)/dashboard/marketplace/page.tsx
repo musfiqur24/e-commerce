@@ -162,7 +162,7 @@ export default function MarketplacePage() {
       ]}
     >
       <div className="mx-auto w-full space-y-4">
-        <TopImageBanner title="Marketplace" />
+        <TopImageBanner title="Products" />
 
         <Card
           title="All Products"

@@ -4,24 +4,23 @@ interface TopImageBannerProps {
   className?: string;
 }
 
+/**
+ * Slim page-title header — replaces the old full-bleed dark image banner.
+ * Clean, lightweight, matches the warm palette.
+ */
 export default function TopImageBanner({
   title,
   subtitle,
   className = "",
 }: TopImageBannerProps) {
   return (
-    <div
-      className={`relative flex min-h-[68px] flex-col justify-center overflow-hidden rounded-lg bg-cover bg-center bg-no-repeat px-4 text-white lg:px-6 ${className}`}
-      style={{
-        backgroundImage: "url('/assets/Top_Nav.png')",
-      }}
-    >
+    <div className={`border-b border-[#e5e0d8] bg-white px-6 pb-4 pt-5 lg:px-8 ${className}`}>
       {subtitle && (
-        <p className="text-[16px] leading-[1.1] font-medium text-[#f9f9f9]">
+        <p className="mb-0.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-[#c8860a]">
           {subtitle}
         </p>
       )}
-      <h1 className="mt-1 text-2xl leading-[1.25] font-medium tracking-[-0.23px] text-[#f9f9f9]">
+      <h1 className="text-2xl font-bold tracking-tight text-[#1a1a1a] lg:text-3xl">
         {title}
       </h1>
     </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 import Image from "next/image";
+import { useCart } from "@/context/CartContext";
 import {
   BuildingStorefront,
   ShoppingCart,
@@ -12,6 +13,7 @@ import {
   BarsThree,
   XMark,
   SquaresPlus,
+  House,
   Shopping,
   DocumentSeries,
   User,
@@ -32,8 +34,8 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { label: "Dashboard", href: "/dashboard", Icon: SquaresPlus },
-  { label: "Marketplace", href: "/dashboard/marketplace", Icon: BuildingStorefront },
+  { label: "Home", href: "/dashboard", Icon: House },
+  { label: "Products", href: "/dashboard/marketplace", Icon: BuildingStorefront },
   { label: "Cart", href: "/dashboard/cart", Icon: ShoppingCart },
   { label: "Orders", href: "/dashboard/orders", Icon: Shopping },
   { label: "Documents", href: "/dashboard/documents", Icon: DocumentSeries },
@@ -56,8 +58,16 @@ function SidebarContent({
   variant,
 }: SidebarContentProps) {
   const [profileOpen, setProfileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { signOut } = useClerk();
+  const { itemCount } = useCart();
   const isMobile = variant === "mobile";
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const cartCount = mounted ? itemCount : 0;
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -118,12 +128,13 @@ function SidebarContent({
       >
         {navItems.map(({ label, href, Icon }) => {
           const active = isActive(href);
+          const isCart = href === "/dashboard/cart";
           return (
             <Link
               key={href}
               href={href}
               onClick={onClose}
-              className={`group flex items-center gap-2 rounded-[6px] text-[13px] leading-[1.1] font-medium transition-colors ${
+              className={`group flex items-center justify-between rounded-[6px] text-[13px] leading-[1.1] font-medium transition-colors ${
                 isMobile ? "p-4" : "h-7 pr-2 pl-1.5"
               } ${
                 active
@@ -131,14 +142,28 @@ function SidebarContent({
                   : "text-[#757575] hover:bg-white hover:text-[#1c1c1c]"
               }`}
             >
-              <Icon
-                className={`size-[15px] shrink-0 transition-colors ${
-                  active
-                    ? "text-[#1c1c1c]"
-                    : "text-[#757575] group-hover:text-[#1c1c1c]"
-                }`}
-              />
-              {label}
+              <div className="flex items-center gap-2">
+                <div className="relative flex items-center justify-center">
+                  <Icon
+                    className={`size-[15px] shrink-0 transition-colors ${
+                      active
+                        ? "text-[#1c1c1c]"
+                        : "text-[#757575] group-hover:text-[#1c1c1c]"
+                    }`}
+                  />
+                  {isCart && cartCount > 0 && (
+                    <span className="absolute -top-1.5 -right-2 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[#c8860a] px-0.5 text-[9px] font-bold leading-none text-white shadow-sm">
+                      {cartCount > 99 ? "99+" : cartCount}
+                    </span>
+                  )}
+                </div>
+                <span>{label}</span>
+              </div>
+              {isCart && cartCount > 0 && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-[#c8860a] px-1 text-[10px] font-bold text-white">
+                  {cartCount}
+                </span>
+              )}
             </Link>
           );
         })}

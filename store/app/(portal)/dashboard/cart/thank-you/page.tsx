@@ -125,7 +125,7 @@ export default function CheckoutThankYouPage() {
                   variant="secondary"
                   className="h-10 rounded-md border border-neutral-200 bg-white px-5 text-xs text-neutral-700"
                 >
-                  Back to Marketplace
+                  Back to Products
                 </Button>
               </div>
             </div>

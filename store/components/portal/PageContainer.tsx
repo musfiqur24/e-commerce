@@ -15,10 +15,9 @@ export default function PageContainer({
   contentClassName = "",
 }: PageContainerProps) {
   return (
-    <div className={`flex min-h-screen flex-col bg-[#f9f9f9] ${className}`}>
-      {breadcrumb && <Topbar breadcrumb={breadcrumb} />}
+    <div className={`flex min-h-[calc(100vh-4rem)] flex-col bg-[#faf8f5] ${className}`}>
       <div
-        className={`mx-auto w-full max-w-[1200px] flex-1 ${contentClassName || "px-4 pt-3 pb-8 lg:px-6"}`}
+        className={`mx-auto w-full max-w-[1400px] flex-1 ${contentClassName || "px-4 pt-4 pb-10 lg:px-8"}`}
       >
         {children}
       </div>

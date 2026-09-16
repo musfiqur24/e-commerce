@@ -1,5 +1,5 @@
 import { currentUser } from "@clerk/nextjs/server";
-import Sidebar from "@/components/portal/Sidebar";
+import Navbar from "@/components/portal/Navbar";
 import Providers from "@/providers";
 
 export default async function PortalLayout({
@@ -23,13 +23,12 @@ export default async function PortalLayout({
 
   return (
     <Providers>
-      <div className="min-h-screen flex bg-neutral-50">
-        <Sidebar
+      <div className="min-h-screen flex flex-col bg-[#faf8f5]">
+        <Navbar
           user={userProps}
-          logoSrc="/logo.png"
+          logoSrc="/Logo.png"
         />
-        <main className="flex-1 lg:pl-55 min-h-screen">
-          <div className="h-11 bg-[#f9f9f9] lg:hidden" />
+        <main className="flex-1">
           {children}
         </main>
       </div>

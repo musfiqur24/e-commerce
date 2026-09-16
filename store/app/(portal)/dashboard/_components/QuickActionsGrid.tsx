@@ -25,24 +25,24 @@ export default function QuickActionsGrid({ actions }: QuickActionsGridProps) {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-3 px-3 pb-4 lg:grid-cols-4 lg:gap-4 lg:px-6">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {actions.map((action) => (
         <ImageCard
           key={action.href}
           src={action.imageSrc}
           alt={action.title}
-          height="h-[154.5px]"
+          height="h-[148px]"
           padding="p-0"
-          imageContainerClassName="rounded-[6px]"
-          className="group cursor-pointer rounded-lg border-0 p-3 shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_1px_2px_-1px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.1)] transition-shadow hover:shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_1px_2px_-1px_rgba(0,0,0,0.08),0_2px_10px_rgba(0,0,0,0.14)] lg:p-4"
+          imageContainerClassName="rounded-xl overflow-hidden"
+          className="group cursor-pointer rounded-2xl border border-[#e5e0d8] bg-white p-4 shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.10)]"
           onClick={() => handleActionClick(action)}
         >
-          <div className="flex flex-1 flex-col gap-4 pt-4">
+          <div className="flex flex-1 flex-col gap-3 pt-4">
             <div className="flex-1">
-              <h3 className="text-[18px] leading-[1.25] font-medium tracking-[-0.17px] text-[#1c1c1c]">
+              <h3 className="text-[17px] font-bold tracking-tight text-[#1a1a1a]">
                 {action.title}
               </h3>
-              <p className="mt-2 text-[14px] leading-[1.6] font-medium text-[#757575]">
+              <p className="mt-1.5 text-[13px] leading-[1.55] text-[#6b6b6b]">
                 {action.description}
               </p>
             </div>
@@ -52,7 +52,7 @@ export default function QuickActionsGrid({ actions }: QuickActionsGridProps) {
                   e.stopPropagation();
                   handleActionClick(action);
                 }}
-                className="h-10 w-full rounded-[6px] border-none bg-[#2e2f2f] px-5 py-2 text-[14px] leading-[1.1] font-medium text-white shadow-[0_1px_2px_rgba(0,0,0,0.4),0_0_0_1px_#18181b,inset_0_0.75px_0_rgba(255,255,255,0.2)] hover:bg-[#18181b]"
+                className="h-10 w-full rounded-xl border-none bg-[#1a1a1a] px-5 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#c8860a] active:scale-[0.98]"
               >
                 {action.ctaLabel}
               </Button>
