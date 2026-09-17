@@ -51,6 +51,7 @@ export default function CartItemCard({ item, onUpdateQuantity, onRemove }: CartI
           <h3 className="text-[15px] font-medium text-neutral-900 truncate">
             {product.name}
           </h3>
+          {product.variantTitle && <p className="text-xs text-neutral-500">{product.variantTitle}</p>}
         </div>
       </div>
 

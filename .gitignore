@@ -16,3 +16,6 @@ client-portal/.env
 
 .kiro
 antigravity
+
+# Private local database snapshots
+.local-backups/

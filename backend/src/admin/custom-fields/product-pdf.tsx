@@ -4,7 +4,6 @@ import { ProductPdfField } from "../components/product-pdf-field"
 const unstable_defineCustomFieldsConfig = <TConfig,>(config: TConfig) => config
 
 const PRODUCT_PDF_KEY = "product_pdf"
-const MEDICATION_FORM_STRENGTH_KEY = "medication_form_strength"
 
 const productPdfSchema = z
   .object({
@@ -15,8 +14,6 @@ const productPdfSchema = z
   })
   .nullable()
   .optional()
-
-const medicationFormStrengthSchema = z.string().optional()
 
 const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === "object" && value !== null && !Array.isArray(value)
@@ -39,14 +36,6 @@ const defaultProductPdf = (product?: { metadata?: Record<string, unknown> | null
   }
 }
 
-const defaultMedicationFormStrength = (product?: {
-  metadata?: Record<string, unknown> | null
-}) => {
-  const value = product?.metadata?.[MEDICATION_FORM_STRENGTH_KEY]
-
-  return typeof value === "string" ? value : ""
-}
-
 export default unstable_defineCustomFieldsConfig({
   model: "product",
   link: [],
@@ -55,12 +44,6 @@ export default unstable_defineCustomFieldsConfig({
       zone: "create",
       tab: "general",
       fields: {
-        medication_form_strength: {
-          label: "Medication Form/Strength",
-          description: "Optional medication form and strength.",
-          validation: medicationFormStrengthSchema,
-          defaultValue: "",
-        },
         product_pdf: {
           label: "Product PDF",
           description: "Attach one PDF to this product.",
@@ -73,12 +56,6 @@ export default unstable_defineCustomFieldsConfig({
     {
       zone: "edit",
       fields: {
-        medication_form_strength: {
-          label: "Medication Form/Strength",
-          description: "Optional medication form and strength.",
-          validation: medicationFormStrengthSchema,
-          defaultValue: defaultMedicationFormStrength,
-        },
         product_pdf: {
           label: "Product PDF",
           description: "Attach one PDF to this product.",

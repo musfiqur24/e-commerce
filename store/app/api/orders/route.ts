@@ -79,7 +79,7 @@ export async function GET() {
 
     // Query customer orders from Medusa admin
     const ordersRes = await fetch(
-      `${getBackendUrl()}/admin/orders?customer_id=${customer.id}&fields=*items,*summary`,
+      `${getBackendUrl()}/admin/orders?customer_id=${customer.id}&fields=id,display_id,status,fulfillment_status,payment_status,created_at,total,shipping_total,*items,*summary&order=-created_at`,
       {
         headers: {
           'Authorization': authHeader,
@@ -91,7 +91,7 @@ export async function GET() {
 
     if (!ordersRes.ok) {
       console.warn('Orders query returned status:', ordersRes.status)
-      return NextResponse.json({ orders: [] })
+      return NextResponse.json({ error: 'Unable to load orders. Please try again.' }, { status: 502 })
     }
 
     const ordersData = await ordersRes.json()
@@ -103,11 +103,14 @@ export async function GET() {
       status?: string
       fulfillment_status?: string
       created_at: string
-      summary?: { total?: number; shipping_total?: number }
+      summary?: { current_order_total?: number }
+      shipping_total?: number
+      payment_status?: string
       total?: number
       items?: Array<{
         id: string
         title: string
+        variant_title?: string
         unit_price?: number
         quantity: number
         thumbnail?: string | null
@@ -123,13 +126,11 @@ export async function GET() {
       }
 
       // BDT amounts are stored as whole taka (not minor units) so no /100 needed
-      const totalAmount = order.summary?.total != null
-        ? order.summary.total
+      const totalAmount = order.summary?.current_order_total != null
+        ? order.summary.current_order_total
         : (order.total != null ? order.total : 0)
 
-      const shippingAmount = order.summary?.shipping_total != null
-        ? order.summary.shipping_total
-        : 0
+      const shippingAmount = order.shipping_total ?? 0
 
       return {
         id: order.id,
@@ -137,10 +138,11 @@ export async function GET() {
         total: totalAmount,
         shippingTotal: shippingAmount,
         status,
+        paymentStatus: order.payment_status,
         createdAt: order.created_at,
         items: (order.items || []).map((item) => ({
           id: item.id,
-          name: item.title,
+          name: item.variant_title && item.variant_title !== 'Default' ? `${item.title} (${item.variant_title})` : item.title,
           price: item.unit_price ? item.unit_price : 0,
           quantity: item.quantity,
           thumbnail: item.thumbnail || null,
@@ -151,6 +153,6 @@ export async function GET() {
     return NextResponse.json({ orders })
   } catch (error) {
     console.error('Error fetching orders:', error)
-    return NextResponse.json({ orders: [] })
+    return NextResponse.json({ error: 'Unable to load orders. Please try again.' }, { status: 502 })
   }
 }

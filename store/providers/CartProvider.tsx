@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useReducer, useMemo, useCallback } from 'react'
+import type { CartItem } from '@/types/cart'
 import { CartContext } from '@/context/CartContext'
 import { cartReducer, initialState } from '@/reducers/cartReducer'
 import type { Product } from '@/components/portal/ProductCard'
@@ -10,27 +11,24 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Load cart from localStorage on mount
   React.useEffect(() => {
-    const savedCart = localStorage.getItem('cart')
-    if (savedCart) {
-      try {
+    let restored: CartItem[] = []
+    try {
+      const savedCart = localStorage.getItem('cart:v2')
+      if (savedCart) {
         const parsedCart = JSON.parse(savedCart)
-        parsedCart.forEach((item: any) => {
-          dispatch({ type: 'ADD_TO_CART', payload: item.product })
-          // If quantity > 1, update it
-          if (item.quantity > 1) {
-            dispatch({ type: 'UPDATE_QUANTITY', payload: { id: item.product.id, quantity: item.quantity } })
-          }
-        })
-      } catch (e) {
-        console.error('Failed to parse cart from localStorage', e)
+        if (!Array.isArray(parsedCart)) throw new Error('Invalid cart')
+        restored = parsedCart.filter((item: CartItem) => item?.product?.variantId && Number.isSafeInteger(item.quantity) && item.quantity > 0 && item.product.available !== 0)
       }
+    } catch (e) {
+      console.error('Failed to restore cart', e)
     }
+    dispatch({ type: 'HYDRATE', payload: restored })
   }, [])
 
   // Save cart to localStorage on change
   React.useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(state.cart))
-  }, [state.cart])
+    if (state.hydrated) localStorage.setItem('cart:v2', JSON.stringify(state.cart))
+  }, [state.cart, state.hydrated])
 
   const addToCart = useCallback((product: Product) => {
     dispatch({ type: 'ADD_TO_CART', payload: product })
@@ -46,6 +44,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const clearCart = useCallback(() => {
     dispatch({ type: 'CLEAR_CART' })
+  }, [])
+  const consumeOrder = useCallback((items: Array<{ variant_id?: string; quantity: number }>) => {
+    dispatch({ type: 'CONSUME_ORDER', payload: items })
   }, [])
 
   const subtotal = useMemo(
@@ -67,8 +68,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       removeFromCart,
       updateQuantity,
       clearCart,
+      consumeOrder,
     }),
-    [state.cart, subtotal, itemCount, addToCart, removeFromCart, updateQuantity, clearCart]
+    [state.cart, subtotal, itemCount, addToCart, removeFromCart, updateQuantity, clearCart, consumeOrder]
   )
 
   return (

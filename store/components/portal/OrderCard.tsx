@@ -15,6 +15,7 @@ export interface OrderCardOrder {
   total: number
   shippingTotal?: number
   status: OrderCardStatus
+  paymentStatus?: string
   createdAt: string
   items: {
     id: string
@@ -108,6 +109,7 @@ export default function OrderCard({ order, defaultExpanded = false }: OrderCardP
           <StatusBadge color={getStatusColor(order.status)} className="rounded-full px-2 py-1.5 text-xs leading-[1.1]">
             {order.status}
           </StatusBadge>
+          {order.paymentStatus && <span className="text-xs text-neutral-600">Payment: {order.paymentStatus.replaceAll('_', ' ')}</span>}
           <div className="text-neutral-500">
             {isExpanded ? <ChevronUpMini className="size-3.75" /> : <ChevronDownMini className="size-3.75" />}
           </div>

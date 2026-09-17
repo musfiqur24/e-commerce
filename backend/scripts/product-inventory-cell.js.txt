@@ -1,0 +1,27 @@
+import { createElement as inventoryElement } from "react";
+import { useQuery as useInventoryQuery } from "@tanstack/react-query";
+import { Tooltip as InventoryTooltip } from "@medusajs/ui";
+function ProductInventoryCountCell({ productId }) {
+  const query = useInventoryQuery({
+    queryKey: ["product-inventory-summary", productId],
+    queryFn: async () => {
+      const response = await fetch(`/admin/products/${encodeURIComponent(productId)}/inventory-summary`, { credentials: "include" });
+      if (!response.ok) throw new Error("Could not load inventory");
+      return response.json();
+    },
+    staleTime: 10000, refetchInterval: 30000,
+  });
+  const data = query.data;
+  const label = query.isError ? "Unavailable" : !data ? "…" : data.untracked === data.variants.length && data.untracked > 0 ? "Not tracked" : `${data.total}${data.untracked ? " + untracked" : ""}`;
+  const content = !data ? (query.isError ? "Inventory could not be loaded. Please refresh." : "Loading inventory…") : inventoryElement("div", { className: "flex flex-col gap-2", style: { maxHeight: 360, overflowY: "auto", minWidth: 200 } },
+    inventoryElement("div", { className: "font-semibold text-sm border-b border-ui-border-base pb-1 mb-1" }, "Stock by variant"),
+    ...data.variants.map(variant => {
+      return inventoryElement("div", { key: variant.id, className: "flex justify-between gap-6 font-medium text-sm" },
+        inventoryElement("span", null, variant.title),
+        inventoryElement("span", { className: "tabular-nums" }, variant.available === null ? "Not tracked" : variant.available));
+    }));
+  return inventoryElement(InventoryTooltip, { content }, inventoryElement("button", {
+    type: "button", className: "px-3 py-2 text-sm tabular-nums underline decoration-dotted underline-offset-4",
+    "aria-label": `Inventory: ${label}. Show variant breakdown`, onClick: event => event.stopPropagation()
+  }, label));
+}

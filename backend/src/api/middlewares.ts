@@ -2,9 +2,15 @@ import { defineMiddlewares } from "@medusajs/framework/http";
 import { z } from "@medusajs/framework/zod";
 
 const PRODUCT_PDF_KEY = "product_pdf";
-const MEDICATION_FORM_STRENGTH_KEY = "medication_form_strength";
 
 const productCustomFieldsAdditionalDataValidator = {
+  initial_stock: z.object({
+    location_id: z.string().min(1),
+    quantities: z.array(z.object({
+      options: z.record(z.string(), z.string()),
+      quantity: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+    })).min(1),
+  }).nullable().optional(),
   [PRODUCT_PDF_KEY]: z
     .object({
       url: z.string(),
@@ -14,7 +20,6 @@ const productCustomFieldsAdditionalDataValidator = {
     })
     .nullable()
     .optional(),
-  [MEDICATION_FORM_STRENGTH_KEY]: z.string().nullish(),
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => {
@@ -22,7 +27,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> => {
 };
 
 const hasProductCustomField = (value: Record<string, unknown>) => {
-  return PRODUCT_PDF_KEY in value || MEDICATION_FORM_STRENGTH_KEY in value;
+  return PRODUCT_PDF_KEY in value;
 };
 
 const getProductCustomFields = (payload: Record<string, unknown>) => {
@@ -41,11 +46,6 @@ const getProductCustomFields = (payload: Record<string, unknown>) => {
     if (PRODUCT_PDF_KEY in source) {
       customFieldData[PRODUCT_PDF_KEY] = source[PRODUCT_PDF_KEY];
     }
-
-    if (MEDICATION_FORM_STRENGTH_KEY in source) {
-      customFieldData[MEDICATION_FORM_STRENGTH_KEY] =
-        source[MEDICATION_FORM_STRENGTH_KEY];
-    }
   }
 
   return hasProductCustomField(customFieldData) ? customFieldData : null;
@@ -55,6 +55,12 @@ const mergeProductCustomFieldsIntoMetadata = (req, _res, next) => {
   const mergePayload = (payload: unknown) => {
     if (!isRecord(payload)) {
       return payload;
+    }
+
+    // Stock is an operation, not persistent product metadata.
+    if (isRecord(payload.metadata) && 'initial_stock' in payload.metadata) {
+      const { initial_stock: _stock, ...metadata } = payload.metadata;
+      payload = { ...payload, metadata };
     }
 
     const customFieldData = getProductCustomFields(payload);
@@ -72,26 +78,6 @@ const mergeProductCustomFieldsIntoMetadata = (req, _res, next) => {
         delete metadata[PRODUCT_PDF_KEY];
       } else {
         metadata[PRODUCT_PDF_KEY] = productPdf;
-      }
-    }
-
-    if (MEDICATION_FORM_STRENGTH_KEY in customFieldData) {
-      const medicationFormStrength =
-        customFieldData[MEDICATION_FORM_STRENGTH_KEY];
-
-      if (typeof medicationFormStrength === "string") {
-        const trimmedValue = medicationFormStrength.trim();
-
-        if (trimmedValue) {
-          metadata[MEDICATION_FORM_STRENGTH_KEY] = trimmedValue;
-        } else {
-          delete metadata[MEDICATION_FORM_STRENGTH_KEY];
-        }
-      } else if (
-        medicationFormStrength === null ||
-        medicationFormStrength === undefined
-      ) {
-        delete metadata[MEDICATION_FORM_STRENGTH_KEY];
       }
     }
 

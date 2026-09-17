@@ -41,14 +41,19 @@ services:
         condition: service_healthy
     ports:
       - "9000:9000"
+    volumes:
+      - ./backend/static:/app/static
     environment:
       # ── Database: point at LOCAL postgres on the host ──────────────────────
       # host.docker.internal resolves to the host machine on Docker Desktop (Win/Mac).
-      # On Linux, add `extra_hosts: ["host.docker.internal:host-gateway"]` below.
       DATABASE_URL: ${DATABASE_URL}
 
       # ── Redis ──────────────────────────────────────────────────────────────
       REDIS_URL: redis://redis:6379
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+      STRIPE_WEBHOOK_SECRET:  ${STRIPE_WEBHOOK_SECRET}
+      PORTAL_REGION_ID: reg_01M2NY65HHC1D7AAMSMCW4SSZX
+      PORTAL_SALES_CHANNEL_ID: sc_01M2MA2BNBCNYAQEH0VW5H0QZH
 
       # ── CORS (update domains when deploying) ───────────────────────────────
       STORE_CORS: "http://localhost:3000,http://localhost:3001"
@@ -59,13 +64,11 @@ services:
       JWT_SECRET:    supersecret
       COOKIE_SECRET: supersecret
 
-      # Use development so session cookies are NOT flagged secure-only.
-      # Secure cookies require HTTPS; plain http://localhost won't send them back,
-      # causing 401 on every /admin/* request after login.
-      NODE_ENV: development
+      # Serve the Admin compiled into the image, not transient Vite /@fs chunks.
+      NODE_ENV: production
+      LOCAL_HTTP_COOKIES: "true"
     # Linux only: uncomment if host.docker.internal doesn't resolve
     # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:9000/health"]
       interval: 30s
@@ -99,16 +102,11 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
+      STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY}
       # Runtime secrets (not baked into the build)
       CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
       CLERK_WEBHOOK_SECRET: ${CLERK_WEBHOOK_SECRET}
       MEDUSA_API_KEY: ${MEDUSA_API_KEY}
-      # eWay
-      NEXT_PUBLIC_EWAY_PUBLIC_API_KEY: epk-0C8C5E6A-A95A-4060-A2E9-3EF709E07681
-      EWAY_API_KEY: 60CF3C26ApYkH7UApBAZ9NwreXnR/Ehrrzbfr++5nth7fmj+yIGNYLtlg4bknDqUeqJcno
-      EWAY_API_PASSWORD: Jm8euurg
-      EWAY_ENVIRONMENT: sandbox
-      EWAY_CURRENCY:     AUD
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000"]
       interval: 30s

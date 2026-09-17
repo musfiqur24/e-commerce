@@ -222,7 +222,7 @@ export async function POST(
   const items = body.items?.filter(isValidItem) ?? [];
   const discountCode = body.discountCode?.trim();
   const shipping = toCurrencyAmount(body.shipping ?? 0);
-  const currencyCode = (body.currencyCode || process.env.EWAY_CURRENCY || "AUD")
+  const currencyCode = (body.currencyCode || "BDT")
     .toLowerCase();
   let previewCartId: string | null = null;
 

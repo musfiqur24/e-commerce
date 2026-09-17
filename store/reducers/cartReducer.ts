@@ -6,7 +6,16 @@ export const initialState: CartState = {
 
 export const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
+    case 'HYDRATE':
+      return { cart: action.payload, hydrated: true }
+    case 'CONSUME_ORDER':
+      return { ...state, cart: state.cart.flatMap(item => {
+        const purchased = action.payload.filter(line => line.variant_id === item.product.variantId).reduce((sum, line) => sum + line.quantity, 0)
+        const quantity = item.quantity - purchased
+        return quantity > 0 ? [{ ...item, quantity }] : []
+      }) }
     case 'ADD_TO_CART': {
+      if (!action.payload.variantId || action.payload.available === 0) return state
       const existingItem = state.cart.find(
         (item) => item.product.id === action.payload.id
       )
@@ -19,6 +28,7 @@ export const cartReducer = (state: CartState, action: CartAction): CartState => 
             item.product.id === action.payload.id
               ? {
                   ...item,
+                  product: action.payload,
                   quantity: Math.min(item.quantity + 1, maxQuantity),
                 }
               : item
@@ -40,11 +50,12 @@ export const cartReducer = (state: CartState, action: CartAction): CartState => 
 
     case 'UPDATE_QUANTITY': {
       const { id, quantity } = action.payload
+      if (!Number.isSafeInteger(quantity)) return state
       const item = state.cart.find((cartItem) => cartItem.product.id === id)
       const maxQuantity = item?.product.maxQuantity ?? Number.POSITIVE_INFINITY
       const nextQuantity = Math.min(quantity, maxQuantity)
 
-      if (quantity <= 0) {
+      if (nextQuantity <= 0) {
         return {
           ...state,
           cart: state.cart.filter((item) => item.product.id !== id),

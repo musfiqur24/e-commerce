@@ -46,21 +46,7 @@ const DEFAULT_CATEGORIES: TicketCategoryOption[] = [
 
 export default function SupportPage() {
   const [activeTab, setActiveTab] = useState<'Open' | 'Closed'>('Open')
-  const [tickets, setTickets] = useState<Ticket[]>([
-    {
-      id: 'demo-1',
-      ticketId: 'SUP-101',
-      creationDate: new Date().toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric',
-      }),
-      title: 'Welcome to Customer Support',
-      description: 'Our customer support team is here to assist with any questions about your orders, shipping, and products.',
-      status: 'Open',
-      ticketstatus: 'Active',
-    },
-  ])
+  const [tickets, setTickets] = useState<Ticket[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [expandedFaq, setExpandedFaq] = useState(0)

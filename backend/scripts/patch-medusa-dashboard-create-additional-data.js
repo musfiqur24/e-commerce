@@ -53,6 +53,19 @@ const sourceGeneralSectionTarget = path.join(
   "product-create-general-section.tsx"
 )
 
+const sourceVariantsSectionTarget = path.join(
+  dashboardRoot,
+  "src",
+  "routes",
+  "products",
+  "product-create",
+  "components",
+  "product-create-details-form",
+  "components",
+  "product-create-details-variant-section",
+  "product-create-details-variant-section.tsx"
+)
+
 const sourceProductDetailConstantsTarget = path.join(
   dashboardRoot,
   "src",
@@ -198,60 +211,51 @@ const patchSourceCreateForm = () => {
   })
 }
 
-const patchSourceCreateDetailsForm = () => {
+// Clean details form of medication_form_strength
+const cleanSourceCreateDetailsForm = () => {
   patchFile(sourceDetailsFormTarget, "source", (source) => {
-    if (!source.includes("const strengthFields = fields.filter")) {
-      source = source.replace(
-        '  const fields = getFormFields("product", "create", "general")',
-        '  const fields = getFormFields("product", "create", "general")\n  const strengthFields = fields.filter(\n    (field) => field.name === "medication_form_strength"\n  )\n  const remainingFields = fields.filter(\n    (field) => field.name !== "medication_form_strength"\n  )'
-      )
-    }
-
+    // Remove strengthFields filter
     source = source.replace(
-      "          <ProductCreateGeneralSection form={form} />",
-      "          <ProductCreateGeneralSection\n            form={form}\n            strengthFields={strengthFields}\n          />"
+      /const strengthFields = fields\.filter\(\s*\(field\) => field\.name === "medication_form_strength"\s*\)\s*const remainingFields = fields\.filter\(\s*\(field\) => field\.name !== "medication_form_strength"\s*\)/g,
+      ""
     )
-
     source = source.replace(
-      "          <FormExtensionZone fields={fields} form={form} />",
-      "          <FormExtensionZone fields={remainingFields} form={form} />"
+      /<ProductCreateGeneralSection\s+form=\{form\}\s+strengthFields=\{strengthFields\}\s*\/>/g,
+      "<ProductCreateGeneralSection form={form} />"
     )
-
+    source = source.replace(
+      /<FormExtensionZone fields=\{remainingFields\} form=\{form\} \/>/g,
+      "<FormExtensionZone fields={fields} form={form} />"
+    )
     return source
   })
 }
 
-const patchSourceCreateGeneralSection = () => {
+// Clean general section of medication_form_strength
+const cleanSourceCreateGeneralSection = () => {
   patchFile(sourceGeneralSectionTarget, "source", (source) => {
-    if (!source.includes("../../../../../../../dashboard-app")) {
-      source = source.replace(
-        'import { HandleInput } from "../../../../../../../components/inputs/handle-input"\nimport { ProductCreateSchemaType } from "../../../../types"',
-        'import { HandleInput } from "../../../../../../../components/inputs/handle-input"\nimport { FormExtensionZone } from "../../../../../../../dashboard-app"\nimport type { FormField } from "../../../../../../../dashboard-app/types"\nimport { ProductCreateSchemaType } from "../../../../types"'
-      )
-    }
-
     source = source.replace(
-      "type ProductCreateGeneralSectionProps = {\n  form: UseFormReturn<ProductCreateSchemaType>\n}",
-      "type ProductCreateGeneralSectionProps = {\n  form: UseFormReturn<ProductCreateSchemaType>\n  strengthFields?: FormField[]\n}"
+      /import \{ FormExtensionZone \} from "[^"]+dashboard-app"\nimport type \{ FormField \} from "[^"]+dashboard-app\/types"\n/g,
+      ""
     )
-
     source = source.replace(
-      "export const ProductCreateGeneralSection = ({\n  form,\n}: ProductCreateGeneralSectionProps) => {",
-      "export const ProductCreateGeneralSection = ({\n  form,\n  strengthFields = [],\n}: ProductCreateGeneralSectionProps) => {"
+      /strengthFields\?: FormField\[\]\n/g,
+      ""
     )
-
-    if (!source.includes("<FormExtensionZone fields={strengthFields} form={form} />")) {
-      source = source.replace(
-        '      </div>\n      <Form.Field\n        control={form.control}\n        name="description"',
-        '      </div>\n      {strengthFields.length > 0 && (\n        <FormExtensionZone fields={strengthFields} form={form} />\n      )}\n      <Form.Field\n        control={form.control}\n        name="description"'
-      )
-    }
-
+    source = source.replace(
+      /strengthFields = \[\],\n/g,
+      ""
+    )
+    source = source.replace(
+      /\{strengthFields\.length > 0 && \(\s*<FormExtensionZone fields=\{strengthFields\} form=\{form\} \/>\s*\)\}\n/g,
+      ""
+    )
     return source
   })
 }
 
-const patchSourceProductDetail = () => {
+// Clean product detail general section of medication_form_strength
+const cleanSourceProductDetail = () => {
   patchFile(sourceProductDetailConstantsTarget, "source", (source) => {
     return source.replace(
       '"*categories,*shipping_profile,-variants"',
@@ -260,115 +264,16 @@ const patchSourceProductDetail = () => {
   })
 
   patchFile(sourceProductDetailGeneralTarget, "source", (source) => {
-    if (!source.includes("const medicationFormStrength =")) {
-      source = source.replace(
-        '  const displays = getDisplays("product", "general")',
-        '  const displays = getDisplays("product", "general")\n  const medicationFormStrength =\n    typeof product.metadata?.medication_form_strength === "string"\n      ? product.metadata.medication_form_strength\n      : null'
-      )
-    }
-
-    if (!source.includes('title="Medication Form/Strength"')) {
-      source = source.replace(
-        '      <SectionRow title={t("fields.material")} value={product.material} />\n      <SectionRow\n        title={t("fields.discountable")}',
-        '      <SectionRow title={t("fields.material")} value={product.material} />\n      <SectionRow\n        title="Medication Form/Strength"\n        value={medicationFormStrength || null}\n      />\n      <SectionRow\n        title={t("fields.discountable")}'
-      )
-    }
-
+    source = source.replace(
+      /const medicationFormStrength =\s+typeof product\.metadata\?\.medication_form_strength === "string"\s+\? product\.metadata\.medication_form_strength\s+: null\n/g,
+      ""
+    )
+    source = source.replace(
+      /<SectionRow\s+title="Medication Form\/Strength"\s+value=\{medicationFormStrength \|\| null\}\s*\/>\n/g,
+      ""
+    )
     return source
   })
-}
-
-const patchProductCreateFieldLayout = (source) => {
-  if (
-    !source.includes("ProductCreateDetailsForm") ||
-    !source.includes("ProductCreateGeneralSection")
-  ) {
-    return source
-  }
-
-  if (!source.includes("const strengthFields = fields.filter")) {
-    source = source.replace(
-      '  const fields = getFormFields("product", "create", "general");',
-      '  const fields = getFormFields("product", "create", "general");\n  const strengthFields = fields.filter((field) => field.name === "medication_form_strength");\n  const remainingFields = fields.filter((field) => field.name !== "medication_form_strength");'
-    )
-  }
-
-  source = source.replace(
-    "var ProductCreateGeneralSection = ({\n  form\n}) => {",
-    "var ProductCreateGeneralSection = ({\n  form,\n  strengthFields = []\n}) => {"
-  )
-
-  source = source.replace(
-    "ProductCreateGeneralSection, { form }",
-    "ProductCreateGeneralSection, { form, strengthFields }"
-  )
-
-  source = source.replace(
-    "jsx5(FormExtensionZone, { fields, form })",
-    "jsx5(FormExtensionZone, { fields: remainingFields, form })"
-  )
-
-  source = source.replace(
-    "(0, import_jsx_runtime5.jsx)(FormExtensionZone, { fields, form })",
-    "(0, import_jsx_runtime5.jsx)(FormExtensionZone, { fields: remainingFields, form })"
-  )
-
-  if (
-    source.includes("strengthFields = []") &&
-    !source.includes("jsx(FormExtensionZone, { fields: strengthFields, form })")
-  ) {
-    source = source.replace(
-      '    ] }) }),\n    /* @__PURE__ */ jsx(\n      Form.Field,\n      {\n        control: form.control,\n        name: "description",',
-      '    ] }) }),\n    strengthFields.length > 0 && /* @__PURE__ */ jsx(FormExtensionZone, { fields: strengthFields, form }),\n    /* @__PURE__ */ jsx(\n      Form.Field,\n      {\n        control: form.control,\n        name: "description",'
-    )
-  }
-
-  if (
-    source.includes("strengthFields = []") &&
-    !source.includes("import_jsx_runtime.jsx)(FormExtensionZone, { fields: strengthFields, form })")
-  ) {
-    source = source.replace(
-      '    ] }) }),\n    (0, import_jsx_runtime.jsx)(\n      Form.Field,\n      {\n        control: form.control,\n        name: "description",',
-      '    ] }) }),\n    strengthFields.length > 0 && (0, import_jsx_runtime.jsx)(FormExtensionZone, { fields: strengthFields, form }),\n    (0, import_jsx_runtime.jsx)(\n      Form.Field,\n      {\n        control: form.control,\n        name: "description",'
-    )
-  }
-
-  return source
-}
-
-const patchProductDetailRoute = (source) => {
-  if (
-    !source.includes("ProductGeneralSection") ||
-    !source.includes("fields.discountable")
-  ) {
-    return source
-  }
-
-  source = source.replace(
-    '"*categories,*shipping_profile,-variants"',
-    '"*categories,*shipping_profile,metadata,-variants"'
-  )
-
-  if (!source.includes("const medicationFormStrength =")) {
-    source = source.replace(
-      '  const displays = getDisplays("product", "general");',
-      '  const displays = getDisplays("product", "general");\n  const medicationFormStrength = typeof product.metadata?.medication_form_strength === "string" ? product.metadata.medication_form_strength : null;'
-    )
-  }
-
-  if (!source.includes('title: "Medication Form/Strength"')) {
-    source = source.replace(
-      '    /* @__PURE__ */ jsx3(SectionRow, { title: t("fields.material"), value: product.material }),\n    /* @__PURE__ */ jsx3(\n      SectionRow,\n      {\n        title: t("fields.discountable"),',
-      '    /* @__PURE__ */ jsx3(SectionRow, { title: t("fields.material"), value: product.material }),\n    /* @__PURE__ */ jsx3(SectionRow, { title: "Medication Form/Strength", value: medicationFormStrength || null }),\n    /* @__PURE__ */ jsx3(\n      SectionRow,\n      {\n        title: t("fields.discountable"),'
-    )
-
-    source = source.replace(
-      '    (0, import_jsx_runtime3.jsx)(SectionRow, { title: t("fields.material"), value: product.material }),\n    (0, import_jsx_runtime3.jsx)(\n      SectionRow,\n      {\n        title: t("fields.discountable"),',
-      '    (0, import_jsx_runtime3.jsx)(SectionRow, { title: t("fields.material"), value: product.material }),\n    (0, import_jsx_runtime3.jsx)(SectionRow, { title: "Medication Form/Strength", value: medicationFormStrength || null }),\n    (0, import_jsx_runtime3.jsx)(\n      SectionRow,\n      {\n        title: t("fields.discountable"),'
-    )
-  }
-
-  return source
 }
 
 const patchProductCreateRoute = (source) => {
@@ -447,7 +352,7 @@ const patchProductCreateRoute = (source) => {
     additionalDataLine
   )
 
-  return patchProductCreateFieldLayout(source)
+  return source
 }
 
 const patchDashboardDist = () => {
@@ -455,9 +360,28 @@ const patchDashboardDist = () => {
     .filter((file) => /\.(mjs|js)$/.test(file))
     .forEach((file) => {
       patchFile(file, "dist", (source) => {
-        return patchProductDetailRoute(
-          patchProductCreateRoute(patchNormalizeProductValues(source))
+        // Strip medicationFormStrength references
+        source = source.replace(
+          /const medicationFormStrength = typeof product\.metadata\?\.medication_form_strength === "string" \? product\.metadata\.medication_form_strength : null;/g,
+          ""
         )
+        source = source.replace(
+          /\/\* @__PURE__ \*\/ jsx3\(SectionRow, \{ title: "Medication Form\/Strength", value: medicationFormStrength \|\| null \}\),/g,
+          ""
+        )
+        source = source.replace(
+          /\(0, import_jsx_runtime3\.jsx\)\(SectionRow, \{ title: "Medication Form\/Strength", value: medicationFormStrength \|\| null \}\),/g,
+          ""
+        )
+        source = source.replace(
+          /strengthFields\.length > 0 && \/\* @__PURE__ \*\/ jsx\(FormExtensionZone, \{ fields: strengthFields, form \}\),/g,
+          ""
+        )
+        source = source.replace(
+          /strengthFields\.length > 0 && \(0, import_jsx_runtime\.jsx\)\(FormExtensionZone, \{ fields: strengthFields, form \}\),/g,
+          ""
+        )
+        return patchProductCreateRoute(patchNormalizeProductValues(source))
       })
     })
 }
@@ -467,9 +391,7 @@ const patchViteDeps = () => {
     .filter((file) => /\.js$/.test(file))
     .forEach((file) => {
       patchFile(file, "vite", (source) => {
-        return patchProductDetailRoute(
-          patchProductCreateRoute(patchNormalizeProductValues(source))
-        )
+        return patchProductCreateRoute(patchNormalizeProductValues(source))
       })
     })
 }
@@ -492,13 +414,15 @@ const patchBuiltAdminAssets = () => {
 
 patchSourceCreateUtils()
 patchSourceCreateForm()
-patchSourceCreateDetailsForm()
-patchSourceCreateGeneralSection()
-patchSourceProductDetail()
+cleanSourceCreateDetailsForm()
+cleanSourceCreateGeneralSection()
+cleanSourceProductDetail()
 patchDashboardDist()
 patchViteDeps()
 patchBuiltAdminAssets()
+require('./patch-product-create-variants.cjs').run()
+require('./patch-product-inventory-column.cjs')
 
 console.log(
-  `[patch-medusa-dashboard] product create forwards additional_data and custom product fields render in admin (source patched: ${counts.source}, dist patched: ${counts.dist}, vite deps patched: ${counts.vite}, built assets patched: ${counts.built})`
+  `[patch-medusa-dashboard] product create additional_data, variant synchronization, and inventory column applied (source: ${counts.source}, dist: ${counts.dist}, vite: ${counts.vite}, built: ${counts.built})`
 )

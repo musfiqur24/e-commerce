@@ -10,6 +10,7 @@ import ProductViewDetails from "@/components/portal/ProductViewDetails";
 import Toast from "@/components/portal/Toast";
 import Loading from "@/components/portal/Loading";
 import type { Product } from "@/components/portal/ProductCard";
+import { mapVariant, canPurchase, type InventoryVariantInput } from '@/lib/inventory';
 import { useCart } from "@/context/CartContext";
 import {
   getProducts,
@@ -25,9 +26,8 @@ interface MedusaMarketplaceProduct {
   subtitle?: string | null;
   description?: string | null;
   thumbnail?: string | null;
-  variants?: Array<{
-    prices?: Array<{ amount?: number; currency_code?: string }>;
-  }>;
+  variants?: InventoryVariantInput[];
+  options?: Array<{ id: string; title: string }>;
   categories?: Array<{ name: string }>;
   images?: Array<{ url: string }>;
   tags?: Array<{ value: string }>;
@@ -50,7 +50,7 @@ export default function MarketplacePage() {
         setIsLoading(true);
         const data = await getProducts({
           limit: "100",
-          fields: "id,title,subtitle,description,thumbnail,*variants.prices,*categories,*images,*tags,*type" // Request base product fields, raw prices, category fields, tags, and product type (used to gate S4/Shipping products)
+          fields: "id,title,subtitle,description,thumbnail,*variants,*variants.prices,*variants.options,variants.inventory_quantity,*options,*categories,*images,*tags,*type"
         });
 
         if (!data.products || data.products.length === 0) {
@@ -76,14 +76,10 @@ export default function MarketplacePage() {
         // Map Medusa products to our internal Product type
         const mappedProducts: Product[] = sellableProducts.map((p) => {
           // Get the price from the first variant's prices array (prefer BDT currency)
-          const variant = p.variants?.[0];
-          const bdtPrice = variant?.prices?.find(
-            (pr) => pr.currency_code?.toLowerCase() === "bdt"
-          );
-          const rawPrice = bdtPrice?.amount ?? variant?.prices?.[0]?.amount;
-
-          // BDT prices are stored as whole taka in Medusa admin (not minor units)
-          const price = rawPrice !== undefined ? rawPrice : 0;
+          const variants = (p.variants ?? []).map(variant => mapVariant(variant, p.options));
+          const variant = variants.find(canPurchase) ?? variants[0];
+          const price = variant?.price ?? 0;
+          const available = variants.some(item => item.available === null) ? null : variants.reduce((sum, item) => sum + (item.available ?? 0), 0);
 
           // Category is multi-select (Low Testosterone / Performance &
           // Recovery / Others) — use the first as the primary display tag.
@@ -91,6 +87,12 @@ export default function MarketplacePage() {
 
           return {
             id: p.id,
+            productId: p.id,
+            variantId: variants.length === 1 ? variant?.id : undefined,
+            variantTitle: variants.length === 1 ? variant?.title : undefined,
+            variants,
+            available,
+            maxQuantity: variants.length === 1 ? variant?.available ?? undefined : undefined,
             name: p.title,
             description: p.subtitle || p.description || "No description available",
             detailedDescription: p.description || undefined,
@@ -114,6 +116,10 @@ export default function MarketplacePage() {
     }
 
     loadProducts();
+    const refresh = () => { if (document.visibilityState === 'visible') void loadProducts(); };
+    const timer = window.setInterval(refresh, 30000);
+    window.addEventListener('focus', refresh);
+    return () => { window.clearInterval(timer); window.removeEventListener('focus', refresh); };
   }, []);
 
   /* ── Filtered products ── */
@@ -228,7 +234,8 @@ export default function MarketplacePage() {
                   product={product}
                   onViewDetails={(p) => setSelectedProduct(p)}
                   onAddToCart={(p) => {
-                    addToCart(p);
+                    if (!p.variantId) { setSelectedProduct(p); return; }
+                    addToCart({ ...p, id: p.variantId });
                     setShowToast(true);
                   }}
                 />

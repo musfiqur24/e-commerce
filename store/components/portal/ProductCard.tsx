@@ -4,9 +4,15 @@ import React from 'react'
 import { Eye, PlusMini } from '@medusajs/icons'
 import Button from './Button'
 import { formatBdt } from '@/lib/currency'
+import { stockMessage, type ProductVariant } from '@/lib/inventory'
 
 export interface Product {
   id: string
+  productId?: string
+  variantId?: string
+  variantTitle?: string
+  variants?: ProductVariant[]
+  available?: number | null
   name: string
   description: string
   detailedDescription?: string
@@ -29,6 +35,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onViewDetails, onAddToCart }: ProductCardProps) {
+  const message = stockMessage(product.available)
+  const hasOptions = (product.variants?.length ?? 0) > 1
   return (
     <div className="group flex h-full w-full flex-col items-start gap-4 overflow-hidden rounded-lg bg-white p-3 shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_1px_2px_-1px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.1)] md:p-6">
       {/* Product Image */}
@@ -49,6 +57,7 @@ export default function ProductCard({ product, onViewDetails, onAddToCart }: Pro
         <div className="flex-1">
           <h3 className="text-2xl font-normal leading-[1.25] tracking-[-0.2304px] text-[#1c1c1c]">{product.name}</h3>
           <p className="mt-0.5 line-clamp-2 text-[13px] font-normal leading-[1.6] text-[#757575]">{product.description}</p>
+          {message && <p role="status" className="mt-2 text-sm font-medium text-amber-700">{message}</p>}
         </div>
 
         <div className="flex flex-col gap-4">
@@ -75,10 +84,11 @@ export default function ProductCard({ product, onViewDetails, onAddToCart }: Pro
               variant="primary"
               size="small"
               className="h-10 flex-1 gap-1.5 rounded-md border-0 bg-[#2e2f2f] px-5 text-sm font-normal text-white shadow-[0_1px_2px_rgba(0,0,0,0.4),0_0_0_1px_#18181b,inset_0_0.75px_0_rgba(255,255,255,0.2)] hover:bg-black"
-              onClick={() => onAddToCart?.(product)}
+              disabled={product.available === 0 || product.price <= 0}
+              onClick={() => hasOptions ? onViewDetails?.(product) : onAddToCart?.(product)}
             >
               <PlusMini className="size-3.75" />
-              Add to Cart
+              {product.available === 0 ? 'Out of stock' : hasOptions ? 'Choose options' : 'Add to Cart'}
             </Button>
           </div>
         </div>

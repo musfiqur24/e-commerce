@@ -154,21 +154,9 @@ Look for:
 
 If `hubspot_id` exists, HubSpot contact creation succeeded at the API level. If the HubSpot UI does not show it immediately, wait briefly and search again, or open the contact directly by id.
 
-## eWAY Cart Payments
+## Inventory and Stripe checkout
 
-Medicine cart checkout uses eWAY Secure Fields in the browser and the Rapid Direct Connection API on the server. Configure these variables in `.env.local`:
-
-```bash
-NEXT_PUBLIC_EWAY_PUBLIC_API_KEY=epk-...
-EWAY_API_KEY=...
-EWAY_API_PASSWORD=...
-EWAY_ENVIRONMENT=sandbox
-EWAY_CURRENCY=AUD
-```
-
-Use `EWAY_ENVIRONMENT=production` only with live credentials.
-
-In production, set these eWAY values in `/opt/patient-portal/.env.frontend`. The app reads the public eWAY key through `/api/payments/eway-config` at runtime, so changing it on the VM only requires recreating the frontend container after this code has been deployed.
+See [the setup guide](../docs/inventory-and-stripe.md) for variant quantities, warehouse configuration, and Stripe setup.
 
 ## Production Environment on GCP
 
@@ -196,7 +184,7 @@ NEXT_PUBLIC_MEDUSA_BACKEND_URL
 NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY
 ```
 
-Application runtime secrets should live in the VM env files instead. This includes HubSpot, Clerk server secrets, database, CORS, JWT/cookie, Medusa admin, Google, SMTP, and eWAY private credentials.
+Application runtime secrets should live in the VM env files instead. This includes HubSpot, Clerk server secrets, database, CORS, JWT/cookie, Medusa admin, Google, SMTP, and Stripe private credentials.
 
 To check the env files on the VM:
 

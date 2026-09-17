@@ -7,6 +7,7 @@ export interface CartItem {
 
 export interface CartState {
   cart: CartItem[]
+  hydrated?: boolean
 }
 
 export interface CartContextType extends CartState {
@@ -16,9 +17,12 @@ export interface CartContextType extends CartState {
   removeFromCart: (productId: string) => void
   updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
+  consumeOrder: (items: Array<{ variant_id?: string; quantity: number }>) => void
 }
 
 export type CartAction =
+  | { type: 'HYDRATE'; payload: CartItem[] }
+  | { type: 'CONSUME_ORDER'; payload: Array<{ variant_id?: string; quantity: number }> }
   | { type: 'ADD_TO_CART'; payload: Product }
   | { type: 'REMOVE_FROM_CART'; payload: string }
   | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }

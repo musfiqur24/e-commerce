@@ -33,6 +33,10 @@ module.exports = defineConfig({
   },
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
+    redisUrl: process.env.REDIS_URL,
+    // Local Docker uses the compiled Admin over HTTP. Live deployments keep
+    // secure cookies unless this explicit local-only override is set.
+    ...(process.env.LOCAL_HTTP_COOKIES === 'true' ? { cookieOptions: { secure: false, sameSite: 'lax' as const } } : {}),
     http: {
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
@@ -43,8 +47,26 @@ module.exports = defineConfig({
   },
   modules: [
     {
-      resolve: "@medusajs/event-bus-local",
+      resolve: "@medusajs/medusa/locking",
+      options: { providers: [{ resolve: "@medusajs/medusa/locking-postgres", id: "locking-postgres", is_default: true }] },
+    },
+    ...(process.env.STRIPE_API_KEY && process.env.STRIPE_WEBHOOK_SECRET ? [{
+      resolve: "@medusajs/medusa/payment",
+      options: { providers: [{
+        resolve: "@medusajs/medusa/payment-stripe",
+        id: "stripe",
+        options: {
+          apiKey: process.env.STRIPE_API_KEY,
+          webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
+          // Authorize first; capture only after the order and inventory reservation exist.
+          capture: false,
+        },
+      }] },
+    }] : []),
+    {
+      resolve: process.env.REDIS_URL ? "@medusajs/medusa/event-bus-redis" : "@medusajs/event-bus-local",
       key: Modules.EVENT_BUS,
+      options: process.env.REDIS_URL ? { redisUrl: process.env.REDIS_URL } : {},
     },
     {
       resolve: "@medusajs/medusa/file",

@@ -22,14 +22,14 @@ export default function OrdersPage() {
       try {
         const res = await fetch('/api/orders')
         if (!res.ok) {
-          setOrders([])
-          return
+          throw new Error('Unable to load orders. Please refresh to try again.')
         }
         const data = await res.json()
         setOrders(data.orders || [])
+        setError(null)
       } catch (err) {
         console.warn('Could not load orders:', err)
-        setOrders([])
+        setError(err instanceof Error ? err.message : 'Unable to load orders')
       } finally {
         setLoading(false)
       }
@@ -82,7 +82,7 @@ export default function OrdersPage() {
                 layout="list"
                 message="Loading orders..."
               />
-            ) : orders.length === 0 ? (
+            ) : error ? <p role="alert" className="p-6 text-sm text-red-700">{error}</p> : orders.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <p className="text-sm font-medium text-neutral-800">No orders yet</p>
                 <p className="mt-1 text-xs text-neutral-500">

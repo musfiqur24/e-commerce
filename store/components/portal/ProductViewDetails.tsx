@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { PlusMini, XMark } from '@medusajs/icons'
 import Button from './Button'
 import type { Product } from './ProductCard'
 import { formatBdt } from '@/lib/currency'
+import { canPurchase, stockMessage } from '@/lib/inventory'
 
 interface ProductViewDetailsProps {
   product: Product | null
@@ -19,6 +20,10 @@ export default function ProductViewDetails({
   onClose,
   onAddToCart,
 }: ProductViewDetailsProps) {
+  const [selectedId, setSelectedId] = useState('')
+  const selected = product?.variants?.find(variant => variant.id === selectedId)
+    ?? product?.variants?.find(canPurchase) ?? product?.variants?.[0]
+  const message = stockMessage(selected?.available)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
@@ -110,17 +115,33 @@ export default function ProductViewDetails({
             </div>
 
             <div className="flex items-start justify-between gap-4">
+              <div className="space-y-2">
+                {!!product.variants?.length && <label className="block text-sm">
+                  Select options
+                  <select className="mt-2 block w-full rounded border p-2" value={selected?.id ?? ''} onChange={event => setSelectedId(event.target.value)}>
+                    {product.variants.map(variant => <option key={variant.id} value={variant.id}>
+                      {Object.entries(variant.options).map(([name, value]) => `${name}: ${value}`).join(' / ') || variant.title}
+                      {variant.available === 0 ? ' — Out of stock' : ''}
+                    </option>)}
+                  </select>
+                </label>}
+                {message && <p role="status" className="text-sm text-amber-700">{message}</p>}
               <span className="text-4xl font-normal leading-[1.1] tracking-[-0.576px] text-[#1c1c1c]">
-                {formatBdt(product.price)}
+                {selected?.price == null ? 'Price unavailable' : formatBdt(selected.price)}
               </span>
+              </div>
               <Button
                 variant="primary"
                 size="small"
                 className="h-10 shrink-0 gap-1.5 rounded-md border-0 bg-[#2e2f2f] px-5 text-sm font-normal text-white shadow-[0_1px_2px_rgba(0,0,0,0.4),0_0_0_1px_#18181b,inset_0_0.75px_0_rgba(255,255,255,0.2)] hover:bg-black"
                 onClick={() => {
-                  onAddToCart?.(product)
+                  if (!selected || !canPurchase(selected)) return
+                  onAddToCart?.({ ...product, id: selected.id, productId: product.productId ?? product.id,
+                    variantId: selected.id, variantTitle: selected.title, price: selected.price!,
+                    available: selected.available, maxQuantity: selected.available ?? undefined })
                   onClose()
                 }}
+                disabled={!selected || !canPurchase(selected)}
               >
                 <PlusMini className="size-3.75" />
                 Add to Cart
