@@ -72,9 +72,14 @@ const isProductInStock = (
 const getProductPrice = (
   product: NonNullable<Awaited<ReturnType<typeof getMedusaProduct>>>
 ) => {
-  const rawPrice = product.variants?.[0]?.prices?.[0]?.amount
+  const variant = product.variants?.[0]
+  const bdtPrice = variant?.prices?.find(
+    (p) => p.currency_code?.toLowerCase() === 'bdt'
+  )
+  const rawPrice = bdtPrice?.amount ?? variant?.prices?.[0]?.amount
   if (typeof rawPrice !== 'number') return null
-  return rawPrice / 100
+  // BDT prices are stored as whole taka in Medusa admin (not minor units)
+  return rawPrice
 }
 
 // ──────────────────────────────────────────────────────────

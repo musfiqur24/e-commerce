@@ -122,12 +122,13 @@ export async function GET() {
         status = 'In Transit'
       }
 
+      // BDT amounts are stored as whole taka (not minor units) so no /100 needed
       const totalAmount = order.summary?.total != null
-        ? order.summary.total / 100
-        : (order.total != null ? order.total / 100 : 0)
+        ? order.summary.total
+        : (order.total != null ? order.total : 0)
 
       const shippingAmount = order.summary?.shipping_total != null
-        ? order.summary.shipping_total / 100
+        ? order.summary.shipping_total
         : 0
 
       return {
@@ -140,7 +141,7 @@ export async function GET() {
         items: (order.items || []).map((item) => ({
           id: item.id,
           name: item.title,
-          price: item.unit_price ? item.unit_price / 100 : 0,
+          price: item.unit_price ? item.unit_price : 0,
           quantity: item.quantity,
           thumbnail: item.thumbnail || null,
         })),

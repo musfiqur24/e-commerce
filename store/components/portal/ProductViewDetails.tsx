@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { PlusMini, XMark } from '@medusajs/icons'
 import Button from './Button'
 import type { Product } from './ProductCard'
-import { formatAud } from '@/lib/currency'
+import { formatBdt } from '@/lib/currency'
 
 interface ProductViewDetailsProps {
   product: Product | null
@@ -111,7 +111,7 @@ export default function ProductViewDetails({
 
             <div className="flex items-start justify-between gap-4">
               <span className="text-4xl font-normal leading-[1.1] tracking-[-0.576px] text-[#1c1c1c]">
-                {formatAud(product.price)}
+                {formatBdt(product.price)}
               </span>
               <Button
                 variant="primary"

@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { DocumentText, ChevronDownMini, ChevronUpMini, TruckFast } from '@medusajs/icons'
 import StatusBadge from './StatusBadge'
 import Button from './Button'
-import { formatAud } from '@/lib/currency'
+import { formatBdt } from '@/lib/currency'
 
 export type OrderCardStatus = 'Processing' | 'In Transit' | 'Delivered' | 'Cancelled'
 
@@ -87,7 +87,7 @@ export default function OrderCard({ order, defaultExpanded = false }: OrderCardP
           {/* Total */}
           <div className="hidden flex-col sm:flex">
             <span className="text-sm font-normal leading-[1.6] text-[#757575]">Total</span>
-            <span className="text-lg font-normal leading-[1.6] text-[#1c1c1c]">{formatAud(order.total)}</span>
+            <span className="text-lg font-normal leading-[1.6] text-[#1c1c1c]">{formatBdt(order.total)}</span>
           </div>
 
           <div className="hidden h-11 w-px bg-neutral-300 sm:block" />
@@ -103,7 +103,7 @@ export default function OrderCard({ order, defaultExpanded = false }: OrderCardP
         <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-end sm:gap-3">
           <div className="flex flex-col sm:hidden">
             <span className="text-[13px] leading-[1.6] text-[#757575]">Ordered on {orderDate}</span>
-            <span className="text-lg leading-[1.25] tracking-[-0.1728px] text-[#1c1c1c]">{formatAud(order.total)}</span>
+            <span className="text-lg leading-[1.25] tracking-[-0.1728px] text-[#1c1c1c]">{formatBdt(order.total)}</span>
           </div>
           <StatusBadge color={getStatusColor(order.status)} className="rounded-full px-2 py-1.5 text-xs leading-[1.1]">
             {order.status}
@@ -136,7 +136,7 @@ export default function OrderCard({ order, defaultExpanded = false }: OrderCardP
                     <div className="flex flex-col">
                       <span className="text-base font-normal leading-[1.1] text-[#1c1c1c]">{item.name}</span>
                       <span className="mt-1 text-sm font-normal leading-[1.6] text-[#757575]">Qty {item.quantity}</span>
-                      <span className="mt-1 text-sm font-normal leading-[1.6] text-[#1c1c1c]">{formatAud(item.price)}</span>
+                      <span className="mt-1 text-sm font-normal leading-[1.6] text-[#1c1c1c]">{formatBdt(item.price)}</span>
                     </div>
                   </div>
                 ))
@@ -152,17 +152,17 @@ export default function OrderCard({ order, defaultExpanded = false }: OrderCardP
             <div className="space-y-3 text-base leading-[1.6]">
               <div className="flex items-center justify-between text-neutral-500">
                 <span>Subtotal ({order.items.length} items)</span>
-                <span className="text-[#1c1c1c]">{formatAud(subtotal)}</span>
+                <span className="text-[#1c1c1c]">{formatBdt(subtotal)}</span>
               </div>
 
               <div className="flex items-center justify-between text-neutral-500">
                 <span>Shipping</span>
-                <span className="text-[#1c1c1c]">{formatAud(order.shippingTotal ?? 0)}</span>
+                <span className="text-[#1c1c1c]">{formatBdt(order.shippingTotal ?? 0)}</span>
               </div>
 
               <div className="pt-4 mt-4 border-t border-neutral-200 flex items-center justify-between">
                 <span className="text-base text-[#1c1c1c]">Total</span>
-                <span className="text-base text-[#1c1c1c]">{formatAud(order.total)}</span>
+                <span className="text-base text-[#1c1c1c]">{formatBdt(order.total)}</span>
               </div>
               
               <div className="pt-4">

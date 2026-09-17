@@ -199,10 +199,14 @@ export async function getMedusaShippingProduct(): Promise<{ id: string; price: n
       | undefined
 
     if (match) {
-      const rawPrice = match.variants?.[0]?.prices?.[0]?.amount
+      const bdtPrice = match.variants?.[0]?.prices?.find(
+        (p: { currency_code?: string; amount: number }) => p.currency_code?.toLowerCase() === 'bdt'
+      )
+      const rawPrice = bdtPrice?.amount ?? match.variants?.[0]?.prices?.[0]?.amount
       return {
         id: match.id,
-        price: typeof rawPrice === 'number' ? rawPrice / 100 : 0,
+        // BDT prices are stored as whole taka in Medusa admin (not minor units)
+        price: typeof rawPrice === 'number' ? rawPrice : 0,
       }
     }
 

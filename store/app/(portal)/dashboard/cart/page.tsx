@@ -23,7 +23,7 @@ import {
 import { useCart } from "@/context/CartContext";
 import { TopImageBanner } from "@/components/portal";
 import { getEwayCustomerMessage } from "@/lib/eway-errors";
-import { formatAud } from "@/lib/currency";
+import { formatBdt } from "@/lib/currency";
 
 type EwayFieldType = "name" | "card" | "expiry" | "expirytext" | "cvn";
 type EwayFieldStatusKey = "name" | "card" | "expirytext" | "cvn";
@@ -1057,7 +1057,7 @@ function OrderSummary({
 
       <div className="mt-5 flex items-end justify-between border-t border-neutral-200 pt-5">
         <span className="text-sm font-medium text-neutral-900">Total</span>
-        <span className="text-2xl text-neutral-950">{formatAud(total)}</span>
+        <span className="text-2xl text-neutral-950">{formatBdt(total)}</span>
       </div>
 
       {orderPlaced && (
@@ -1210,7 +1210,7 @@ function CheckoutNavigation({
             ) : (
               <span className="flex items-center gap-2">
                 <LockClosedSolidMini className="h-4 w-4" />
-                Pay {formatAud(total)}
+                Pay {formatBdt(total)}
               </span>
             )}
           </Button>
@@ -1345,7 +1345,7 @@ function SummaryRow({
       <span
         className={`font-medium ${tone === "success" ? "text-green-700" : "text-neutral-900"}`}
       >
-        {formatAud(value)}
+        {formatBdt(value)}
       </span>
     </div>
   );

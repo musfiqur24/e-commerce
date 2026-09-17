@@ -4,7 +4,7 @@ import React from 'react'
 import { PlusMini, MinusMini, Trash } from '@medusajs/icons'
 import StatusBadge from './StatusBadge'
 import type { CartItem } from '@/types/cart'
-import { formatAud } from '@/lib/currency'
+import { formatBdt } from '@/lib/currency'
 
 interface CartItemCardProps {
   item: CartItem
@@ -80,7 +80,7 @@ export default function CartItemCard({ item, onUpdateQuantity, onRemove }: CartI
         {/* Price & Remove */}
         <div className="flex flex-col items-end gap-1.5 w-22.5">
           <span className="text-[17px] font-medium text-neutral-900">
-            {formatAud(product.price * quantity)}
+            {formatBdt(product.price * quantity)}
           </span>
           <button
             onClick={() => onRemove(product.id)}

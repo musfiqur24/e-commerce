@@ -13,7 +13,7 @@ import PageContainer from '@/components/portal/PageContainer'
 import TopImageBanner from '@/components/portal/TopImageBanner'
 import Card from '@/components/portal/Card'
 import Button from '@/components/portal/Button'
-import { formatAud } from '@/lib/currency'
+import { formatBdt } from '@/lib/currency'
 
 const CHECKOUT_CONFIRMATION_STORAGE_KEY = 'posora:last-order-confirmation'
 
@@ -191,11 +191,11 @@ export default function CheckoutThankYouPage() {
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium text-neutral-900">{item.name}</p>
                         <p className="mt-0.5 truncate text-[11px] text-neutral-500">
-                          {item.category || 'Medication'} · {formatAud(item.unitPrice)} each
+                          {item.category || 'Medication'} · {formatBdt(item.unitPrice)} each
                         </p>
                       </div>
                       <span className="text-sm font-medium text-neutral-900">
-                        {formatAud(item.lineTotal)}
+                        {formatBdt(item.lineTotal)}
                       </span>
                     </div>
                   ))}
@@ -275,7 +275,7 @@ export default function CheckoutThankYouPage() {
                   <div className="flex items-end justify-between">
                     <span className="text-sm font-medium text-neutral-900">Total</span>
                     <span className="text-2xl font-semibold text-neutral-950">
-                      {formatAud(confirmation.totals.total)}
+                      {formatBdt(confirmation.totals.total)}
                     </span>
                   </div>
                   <div className="rounded-md border border-neutral-100 bg-neutral-50 p-3">
@@ -310,7 +310,7 @@ function SummaryRow({
     <div className="flex items-center justify-between text-xs text-neutral-500">
       <span>{label}</span>
       <span className={`font-medium ${tone === 'success' ? 'text-green-700' : 'text-neutral-900'}`}>
-        {formatAud(value)}
+        {formatBdt(value)}
       </span>
     </div>
   )

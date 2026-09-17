@@ -1,10 +1,13 @@
 /**
- * Formats an amount as AUD, e.g. `AU$12.34` / `-AU$12.34`.
- * Every price shown in the portal is AUD-only today, but a bare `$` reads
- * as ambiguous (USD?) to patients, so the currency is always marked — in the
- * same "AU$" prefix style used on the treatments overview page.
+ * Formats an amount as BDT (Bangladeshi Taka), e.g. `BDT 12.34` / `-BDT 12.34`.
+ * Based on Medusa currency configuration with currency code 'bdt'.
  */
-export function formatAud(value: number): string {
+export function formatBdt(value: number): string {
   const sign = value < 0 ? "-" : "";
-  return `${sign}AU$${Math.abs(value).toFixed(2)}`;
+  return `${sign}BDT ${Math.abs(value).toFixed(2)}`;
 }
+
+// Aliases for compatibility across the codebase
+export const formatCurrency = formatBdt;
+export const formatAud = formatBdt;
+

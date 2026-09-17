@@ -25,7 +25,9 @@ interface MedusaMarketplaceProduct {
   subtitle?: string | null;
   description?: string | null;
   thumbnail?: string | null;
-  variants?: Array<{ prices?: Array<{ amount?: number }> }>;
+  variants?: Array<{
+    prices?: Array<{ amount?: number; currency_code?: string }>;
+  }>;
   categories?: Array<{ name: string }>;
   images?: Array<{ url: string }>;
   tags?: Array<{ value: string }>;
@@ -73,11 +75,15 @@ export default function MarketplacePage() {
 
         // Map Medusa products to our internal Product type
         const mappedProducts: Product[] = sellableProducts.map((p) => {
-          // Get the price from the first variant's prices array
+          // Get the price from the first variant's prices array (prefer BDT currency)
           const variant = p.variants?.[0];
-          const rawPrice = variant?.prices?.[0]?.amount;
+          const bdtPrice = variant?.prices?.find(
+            (pr) => pr.currency_code?.toLowerCase() === "bdt"
+          );
+          const rawPrice = bdtPrice?.amount ?? variant?.prices?.[0]?.amount;
 
-          const price = rawPrice !== undefined ? rawPrice / 100 : 0;
+          // BDT prices are stored as whole taka in Medusa admin (not minor units)
+          const price = rawPrice !== undefined ? rawPrice : 0;
 
           // Category is multi-select (Low Testosterone / Performance &
           // Recovery / Others) — use the first as the primary display tag.

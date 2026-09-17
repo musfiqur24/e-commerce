@@ -3,7 +3,7 @@
 import React from 'react'
 import { Eye, PlusMini } from '@medusajs/icons'
 import Button from './Button'
-import { formatAud } from '@/lib/currency'
+import { formatBdt } from '@/lib/currency'
 
 export interface Product {
   id: string
@@ -54,7 +54,7 @@ export default function ProductCard({ product, onViewDetails, onAddToCart }: Pro
         <div className="flex flex-col gap-4">
           {/* Price & Category */}
           <div className="flex items-end justify-between gap-4">
-            <span className="text-4xl font-normal leading-[1.1] tracking-[-0.576px] text-[#1c1c1c]">{formatAud(product.price)}</span>
+            <span className="text-4xl font-normal leading-[1.1] tracking-[-0.576px] text-[#1c1c1c]">{formatBdt(product.price)}</span>
             <span className="shrink-0 rounded border-[0.5px] border-[#e0e0e0] bg-[#eee] px-1 py-0.5 text-center text-xs font-normal leading-[1.1] text-[#424242]">
               {product.category}
             </span>
