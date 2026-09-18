@@ -1,0 +1,57 @@
+import { createElement as inventoryElement, useEffect as inventoryEffect, useState as inventoryState } from 'react'
+import { Container as InventoryContainer, Heading as InventoryHeading, Input as InventoryInput, Button as InventoryButton, Text as InventoryText } from '@medusajs/ui'
+import { Link as InventoryLink } from 'react-router-dom'
+
+function GroupedInventoryList() {
+  const h = inventoryElement
+  const [products, setProducts] = inventoryState([])
+  const [count, setCount] = inventoryState(0)
+  const [page, setPage] = inventoryState(0)
+  const [search, setSearch] = inventoryState('')
+  const [expanded, setExpanded] = inventoryState({})
+  const [loading, setLoading] = inventoryState(true)
+  const [error, setError] = inventoryState('')
+  const [allItems, setAllItems] = inventoryState(false)
+  inventoryEffect(() => {
+    const abort = new AbortController()
+    setLoading(true)
+    setError('')
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams({ limit: '20', offset: String(page * 20), q: search,
+        fields: 'id,title,*variants,*variants.inventory_items,*variants.inventory_items.inventory,*variants.inventory_items.inventory.location_levels' })
+      fetch('/admin/products?' + params, { credentials: 'include', signal: abort.signal })
+        .then(async response => { if (!response.ok) throw new Error('Could not load product inventory'); return response.json() })
+        .then(data => { setProducts(data.products); setCount(data.count) })
+        .catch(err => { if (!abort.signal.aborted) setError(err.message) })
+        .finally(() => { if (!abort.signal.aborted) setLoading(false) })
+    }, 200)
+    return () => { clearTimeout(timer); abort.abort() }
+  }, [page, search])
+  const cell = (value, key) => h('td', { key, className: 'px-6 py-3 txt-small text-ui-fg-subtle' }, value)
+  const rows = products.map(product => h('div', { key: product.id, className: 'border-t border-ui-border-base' },
+    h('button', { type: 'button', className: 'flex w-full items-center gap-x-3 px-6 py-4 text-left hover:bg-ui-bg-base-hover txt-small-plus',
+      'aria-expanded': !!expanded[product.id], onClick: () => setExpanded(value => ({ ...value, [product.id]: !value[product.id] })) },
+      h('span', { 'aria-hidden': true }, expanded[product.id] ? '▾' : '▸'), product.title,
+      h('span', { className: 'ml-auto text-ui-fg-subtle txt-small' }, product.variants.length + ' variants')),
+    expanded[product.id] && h('table', { className: 'w-full border-t border-ui-border-base' },
+      h('thead', {}, h('tr', {}, ['Variant', 'SKU', 'Warehouse / Stock', ''].map(title => h('th', { key: title, className: 'px-6 py-3 text-left txt-small-plus text-ui-fg-subtle' }, title)))),
+      h('tbody', {}, product.variants.map(variant => {
+        const items = variant.inventory_items || []
+        const levels = items.flatMap(item => item.inventory?.location_levels || [])
+        const stocked = levels.reduce((sum, level) => sum + Number(level.stocked_quantity || 0), 0)
+        return h('tr', { key: variant.id, className: 'border-t border-ui-border-base' },
+          cell(h(InventoryLink, { to: '/products/' + product.id + '/variants/' + variant.id, className: 'text-ui-fg-interactive' }, variant.title), 'title'),
+          cell(variant.sku || '—', 'sku'), cell(variant.manage_inventory ? stocked + ' in stock at ' + new Set(levels.map(level => level.location_id)).size + ' locations' : 'Not tracked', 'stock'),
+          cell(items.map(item => h(InventoryLink, { key: item.inventory_item_id, to: '/inventory/' + item.inventory_item_id, className: 'text-ui-fg-interactive mr-3' }, 'Manage stock')), 'action'))
+      })))))
+  return h('div', { className: 'flex flex-col gap-y-4' },
+    h(InventoryContainer, { className: 'p-0 overflow-hidden' },
+      h('div', { className: 'flex items-center justify-between px-6 py-4' }, h(InventoryHeading, {}, 'Inventory'),
+        h(InventoryButton, { variant: 'secondary', size: 'small', onClick: () => setAllItems(value => !value) }, allItems ? 'Hide inventory items' : 'All inventory items')),
+      h('div', { className: 'px-6 pb-4' }, h(InventoryInput, { placeholder: 'Search products', 'aria-label': 'Search products', value: search, onChange: event => { setSearch(event.target.value); setPage(0) } })),
+      error ? h(InventoryText, { className: 'px-6 py-4 text-ui-fg-error' }, error) : loading ? h(InventoryText, { className: 'px-6 py-4' }, 'Loading inventory…') : rows.length ? rows : h(InventoryText, { className: 'px-6 py-4' }, 'No products found'),
+      h('div', { className: 'flex items-center justify-end gap-x-3 border-t px-6 py-4 txt-small' }, count + ' products',
+        h(InventoryButton, { size: 'small', variant: 'secondary', disabled: page === 0 || loading, onClick: () => setPage(page - 1) }, 'Previous'),
+        h(InventoryButton, { size: 'small', variant: 'secondary', disabled: (page + 1) * 20 >= count || loading, onClick: () => setPage(page + 1) }, 'Next'))),
+    allItems && h(InventoryListTable))
+}

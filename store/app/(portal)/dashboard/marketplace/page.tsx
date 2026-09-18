@@ -104,6 +104,7 @@ export default function MarketplacePage() {
             tag: categoryName,
             tags: p.tags?.map((tag) => tag.value) || [],
             imageSrc: p.thumbnail || p.images?.[0]?.url || "",
+            images: p.images?.map(image => image.url) || [],
           };
         });
 

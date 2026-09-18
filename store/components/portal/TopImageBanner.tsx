@@ -14,7 +14,7 @@ export default function TopImageBanner({
   className = "",
 }: TopImageBannerProps) {
   return (
-    <div className={`border-b border-[#e5e0d8] bg-white px-6 pb-4 pt-5 lg:px-8 ${className}`}>
+    <div className={`rounded-xl border border-[#eadfcd] bg-[#fff8ec] px-6 pb-4 pt-5 shadow-[0_1px_2px_rgba(77,55,28,0.04)] lg:px-8 ${className}`}>
       {subtitle && (
         <p className="mb-0.5 text-[12px] font-semibold uppercase tracking-[0.1em] text-[#c8860a]">
           {subtitle}

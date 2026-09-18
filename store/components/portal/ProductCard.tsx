@@ -3,6 +3,7 @@
 import React from 'react'
 import { Eye, PlusMini } from '@medusajs/icons'
 import Button from './Button'
+import ProductGallery from './ProductGallery'
 import { formatBdt } from '@/lib/currency'
 import { stockMessage, type ProductVariant } from '@/lib/inventory'
 
@@ -24,6 +25,7 @@ export interface Product {
   tag?: string
   tags?: string[]
   imageSrc?: string
+  images?: string[]
   productPdfUrl?: string | null
   maxQuantity?: number
 }
@@ -40,17 +42,7 @@ export default function ProductCard({ product, onViewDetails, onAddToCart }: Pro
   return (
     <div className="group flex h-full w-full flex-col items-start gap-4 overflow-hidden rounded-lg bg-white p-3 shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_1px_2px_-1px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.1)] md:p-6">
       {/* Product Image */}
-      <div className="relative h-64.75 w-full shrink-0 overflow-hidden rounded-md bg-white">
-        {product.imageSrc ? (
-          <img
-            src={product.imageSrc}
-            alt={product.name}
-            className="size-full object-cover"
-          />
-        ) : (
-          <div className="w-20 h-24 bg-neutral-200 rounded-lg" />
-        )}
-      </div>
+      <ProductGallery key={product.id} name={product.name} images={[product.imageSrc || '', ...(product.images || [])]} />
 
       {/* Product Info */}
       <div className="flex w-full flex-1 flex-col justify-between gap-4">

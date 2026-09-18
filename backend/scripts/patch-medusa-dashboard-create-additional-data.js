@@ -422,6 +422,8 @@ patchViteDeps()
 patchBuiltAdminAssets()
 require('./patch-product-create-variants.cjs').run()
 require('./patch-product-inventory-column.cjs')
+require('./patch-grouped-inventory.cjs')
+require('./patch-product-media.cjs')
 
 console.log(
   `[patch-medusa-dashboard] product create additional_data, variant synchronization, and inventory column applied (source: ${counts.source}, dist: ${counts.dist}, vite: ${counts.vite}, built: ${counts.built})`

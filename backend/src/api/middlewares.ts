@@ -1,14 +1,27 @@
-import { defineMiddlewares } from "@medusajs/framework/http";
+import { defineMiddlewares, validateAndTransformBody } from "@medusajs/framework/http";
 import { z } from "@medusajs/framework/zod";
+import productMedia from '../config/product-media.json';
+
+const validateProductImages = (req, res, next) => {
+  const body = req.validatedBody || req.body;
+  if (Array.isArray(body?.images)) {
+    const urls = new Set(body.images.map(image => image.url));
+    if (body.thumbnail) urls.add(body.thumbnail);
+    if (urls.size > productMedia.maxImages) return res.status(400).json({ message: `A product can have up to ${productMedia.maxImages} images.` });
+  }
+  next();
+};
 
 const PRODUCT_PDF_KEY = "product_pdf";
 
 const productCustomFieldsAdditionalDataValidator = {
   initial_stock: z.object({
-    location_id: z.string().min(1),
+    location_id: z.string().min(1).optional(),
     quantities: z.array(z.object({
       options: z.record(z.string(), z.string()),
       quantity: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+      location_id: z.string().min(1).optional(),
+      variant_rank: z.number().int().min(0).optional(),
     })).min(1),
   }).nullable().optional(),
   [PRODUCT_PDF_KEY]: z
@@ -58,18 +71,19 @@ const mergeProductCustomFieldsIntoMetadata = (req, _res, next) => {
     }
 
     // Stock is an operation, not persistent product metadata.
-    if (isRecord(payload.metadata) && 'initial_stock' in payload.metadata) {
-      const { initial_stock: _stock, ...metadata } = payload.metadata;
-      payload = { ...payload, metadata };
+    let record = payload;
+    if (isRecord(record.metadata) && 'initial_stock' in record.metadata) {
+      const { initial_stock: _stock, ...metadata } = record.metadata;
+      record = { ...record, metadata };
     }
 
-    const customFieldData = getProductCustomFields(payload);
+    const customFieldData = getProductCustomFields(record);
 
     if (!customFieldData) {
-      return payload;
+      return record;
     }
 
-    const metadata = isRecord(payload.metadata) ? { ...payload.metadata } : {};
+    const metadata = isRecord(record.metadata) ? { ...record.metadata } : {};
 
     if (PRODUCT_PDF_KEY in customFieldData) {
       const productPdf = customFieldData[PRODUCT_PDF_KEY];
@@ -82,7 +96,7 @@ const mergeProductCustomFieldsIntoMetadata = (req, _res, next) => {
     }
 
     return {
-      ...payload,
+      ...record,
       metadata,
     };
   };
@@ -99,13 +113,24 @@ export default defineMiddlewares({
       method: ["POST"],
       matcher: "/admin/products",
       additionalDataValidator: productCustomFieldsAdditionalDataValidator,
-      middlewares: [mergeProductCustomFieldsIntoMetadata],
+      middlewares: [validateProductImages, mergeProductCustomFieldsIntoMetadata],
     },
     {
       method: ["POST"],
       matcher: "/admin/products/:id",
       additionalDataValidator: productCustomFieldsAdditionalDataValidator,
-      middlewares: [mergeProductCustomFieldsIntoMetadata],
+      middlewares: [validateProductImages, mergeProductCustomFieldsIntoMetadata],
+    },
+    {
+      method: ["POST"],
+      matcher: "/admin/products/:id/restock",
+      middlewares: [validateAndTransformBody(z.object({
+        location_id: z.string().min(1),
+        adjustments: z.array(z.object({
+          variant_id: z.string().min(1),
+          quantity: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+        })).min(1),
+      }))],
     },
     {
       matcher: "/admin/custom",

@@ -41,19 +41,6 @@ export default unstable_defineCustomFieldsConfig({
   link: [],
   forms: [
     {
-      zone: "create",
-      tab: "general",
-      fields: {
-        product_pdf: {
-          label: "Product PDF",
-          description: "Attach one PDF to this product.",
-          validation: productPdfSchema,
-          defaultValue: null,
-          component: ProductPdfField,
-        },
-      },
-    },
-    {
       zone: "edit",
       fields: {
         product_pdf: {

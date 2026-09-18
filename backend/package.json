@@ -16,7 +16,7 @@
     "patch:dashboard": "node scripts/patch-medusa-dashboard-create-additional-data.js",
     "postinstall": "node -e \"const fs=require('fs'); const p='scripts/patch-medusa-dashboard-create-additional-data.js'; if (fs.existsSync(p)) require('./'+p); else console.log('[patch-medusa-dashboard] patch script not present, skipping')\"",
     "prebuild": "npm run patch:dashboard",
-    "build": "medusa build",
+    "build": "medusa build && node scripts/patch-built-product-create.js",
     "predev": "npm run patch:dashboard",
     "start": "medusa start",
     "dev": "medusa develop"
