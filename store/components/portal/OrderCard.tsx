@@ -104,7 +104,7 @@ export default function OrderCard({ order, defaultExpanded = false }: OrderCardP
         <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-end sm:gap-3">
           <div className="flex flex-col sm:hidden">
             <span className="text-[13px] leading-[1.6] text-[#757575]">Ordered on {orderDate}</span>
-            <span className="text-lg leading-[1.25] tracking-[-0.1728px] text-[#1c1c1c]">{formatBdt(order.total)}</span>
+            <span className="text-lg leading-tight tracking-[-0.1728px] text-[#1c1c1c]">{formatBdt(order.total)}</span>
           </div>
           <StatusBadge color={getStatusColor(order.status)} className="rounded-full px-2 py-1.5 text-xs leading-[1.1]">
             {order.status}

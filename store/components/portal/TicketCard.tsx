@@ -31,7 +31,7 @@ export default function TicketCard({ ticket }: TicketCardProps) {
       {/* Body */}
       <div className="space-y-3 px-3 py-4 sm:px-6">
         <div className="space-y-1">
-          <h3 className="text-lg font-normal leading-[1.25] tracking-[-0.1728px] text-[#1c1c1c]">
+          <h3 className="text-lg font-normal leading-tight tracking-[-0.1728px] text-[#1c1c1c]">
             {ticket.title}
           </h3>
           <p className="text-base font-normal leading-[1.6] text-[#757575]">

@@ -208,9 +208,9 @@ export default function CreateTicketModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="create-ticket-title"
-        className="relative flex w-full max-w-[343px] flex-col overflow-hidden rounded-lg bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_8px_16px_rgba(0,0,0,0.08),0_16px_32px_rgba(0,0,0,0.08),inset_0_0_0_1px_white,inset_0_0_0_1.5px_rgba(228,228,231,0.6)] sm:max-w-[560px]"
+        className="relative flex w-full max-w-85.75 flex-col overflow-hidden rounded-lg bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_8px_16px_rgba(0,0,0,0.08),0_16px_32px_rgba(0,0,0,0.08),inset_0_0_0_1px_white,inset_0_0_0_1.5px_rgba(228,228,231,0.6)] sm:max-w-140"
       >
-        <header className="flex h-[54px] shrink-0 items-center gap-2 border-b border-[#e0e0e0] px-3 py-3 sm:h-[62px] sm:px-6 sm:py-4">
+        <header className="flex h-13.5 shrink-0 items-center gap-2 border-b border-[#e0e0e0] px-3 py-3 sm:h-15.5 sm:px-6 sm:py-4">
           <h2
             id="create-ticket-title"
             className="flex-1 text-lg font-medium leading-[1.6] text-[#1c1c1c]"
@@ -261,7 +261,7 @@ export default function CreateTicketModal({
                 <div
                   id={categoryListId}
                   role="listbox"
-                  className="absolute right-0 top-[calc(100%+4px)] z-20 w-full overflow-hidden rounded-lg bg-white p-1 shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_4px_8px_rgba(0,0,0,0.08),0_8px_16px_rgba(0,0,0,0.08)] sm:w-[280px]"
+                  className="absolute right-0 top-[calc(100%+4px)] z-20 w-full overflow-hidden rounded-lg bg-white p-1 shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_4px_8px_rgba(0,0,0,0.08),0_8px_16px_rgba(0,0,0,0.08)] sm:w-70"
                 >
                   <div className="border-b border-[#e0e0e0] pb-1">
                     <input
@@ -323,7 +323,7 @@ export default function CreateTicketModal({
               onChange={(event) => setContent(event.target.value)}
               required
               disabled={isBusy}
-              className="h-[54px] min-h-[54px] w-full resize-y rounded-md bg-[#f9f9f9] px-2 py-1.5 text-[13px] font-normal leading-[1.6] text-[#1c1c1c] outline-none shadow-[0_1px_2px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.08)] transition-shadow placeholder:text-[#8d8d8d] focus:shadow-[0_0_0_1px_#757575] disabled:opacity-60"
+              className="h-13.5 min-h-13.5 w-full resize-y rounded-md bg-[#f9f9f9] px-2 py-1.5 text-[13px] font-normal leading-[1.6] text-[#1c1c1c] outline-none shadow-[0_1px_2px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.08)] transition-shadow placeholder:text-[#8d8d8d] focus:shadow-[0_0_0_1px_#757575] disabled:opacity-60"
             />
 
             <div>
@@ -408,20 +408,20 @@ export default function CreateTicketModal({
             </div>
           </div>
 
-          <footer className="flex h-16 shrink-0 items-center border-t border-[#e0e0e0] bg-white p-3 sm:h-[61px] sm:justify-end sm:px-6 sm:py-4">
+          <footer className="flex h-16 shrink-0 items-center border-t border-[#e0e0e0] bg-white p-3 sm:h-15.25 sm:justify-end sm:px-6 sm:py-4">
             <div className="flex w-full gap-4 sm:w-auto sm:gap-2">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={isBusy}
-                className="flex h-[39px] flex-1 items-center justify-center rounded-md bg-white px-5 text-sm font-medium leading-[1.1] text-[#1c1c1c] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.08)] transition-colors hover:bg-[#f9f9f9] disabled:cursor-not-allowed disabled:opacity-50 sm:h-7 sm:flex-none sm:px-2 sm:text-[13px] sm:font-normal"
+                className="flex h-9.75 flex-1 items-center justify-center rounded-md bg-white px-5 text-sm font-medium leading-[1.1] text-[#1c1c1c] shadow-[0_1px_2px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.08)] transition-colors hover:bg-[#f9f9f9] disabled:cursor-not-allowed disabled:opacity-50 sm:h-7 sm:flex-none sm:px-2 sm:text-[13px] sm:font-normal"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={!canSubmit}
-                className="flex h-[39px] flex-1 items-center justify-center rounded-md bg-[#2e2f2f] px-5 text-sm font-medium leading-[1.1] text-white shadow-[0_1px_2px_rgba(0,0,0,0.4),0_0_0_1px_#18181b,inset_0_0.75px_0_rgba(255,255,255,0.2)] transition-colors hover:bg-[#1c1c1c] disabled:cursor-not-allowed disabled:opacity-50 sm:h-7 sm:flex-none sm:px-2 sm:text-[13px] sm:font-normal"
+                className="flex h-9.75 flex-1 items-center justify-center rounded-md bg-[#2e2f2f] px-5 text-sm font-medium leading-[1.1] text-white shadow-[0_1px_2px_rgba(0,0,0,0.4),0_0_0_1px_#18181b,inset_0_0.75px_0_rgba(255,255,255,0.2)] transition-colors hover:bg-[#1c1c1c] disabled:cursor-not-allowed disabled:opacity-50 sm:h-7 sm:flex-none sm:px-2 sm:text-[13px] sm:font-normal"
               >
                 {isUploading
                   ? 'Uploading…'

@@ -87,7 +87,7 @@ function SidebarContent({
       {/* Logo */}
       <div className={`shrink-0 ${isMobile ? "p-4" : "px-3 py-6"}`}>
         <div
-          className={`flex h-7 items-center rounded-[6px] pl-1 ${
+          className={`flex h-7 items-center rounded-md pl-1 ${
             isMobile ? "justify-between" : "pr-2"
           }`}
         >
@@ -111,10 +111,10 @@ function SidebarContent({
             <button
               type="button"
               onClick={onClose}
-              className="flex size-7 items-center justify-center rounded-[6px] text-[#757575] transition-colors hover:bg-white hover:text-[#1c1c1c] lg:hidden"
+              className="flex size-7 items-center justify-center rounded-md text-[#757575] transition-colors hover:bg-white hover:text-[#1c1c1c] lg:hidden"
               aria-label="Close menu"
             >
-              <XMark className="size-[15px]" />
+              <XMark className="size-3.75" />
             </button>
           )}
         </div>
@@ -134,7 +134,7 @@ function SidebarContent({
               key={href}
               href={href}
               onClick={onClose}
-              className={`group flex items-center justify-between rounded-[6px] text-[13px] leading-[1.1] font-medium transition-colors ${
+              className={`group flex items-center justify-between rounded-md text-[13px] leading-[1.1] font-medium transition-colors ${
                 isMobile ? "p-4" : "h-7 pr-2 pl-1.5"
               } ${
                 active
@@ -145,7 +145,7 @@ function SidebarContent({
               <div className="flex items-center gap-2">
                 <div className="relative flex items-center justify-center">
                   <Icon
-                    className={`size-[15px] shrink-0 transition-colors ${
+                    className={`size-3.75 shrink-0 transition-colors ${
                       active
                         ? "text-[#1c1c1c]"
                         : "text-[#757575] group-hover:text-[#1c1c1c]"
@@ -218,8 +218,8 @@ function SidebarContent({
         <button
           type="button"
           onClick={() => setProfileOpen((open) => !open)}
-          className={`flex w-full items-center gap-2 rounded-[6px] bg-white text-left transition-colors hover:bg-neutral-50 focus:outline-none ${
-            isMobile ? "h-[47px] px-4 py-3" : "py-2 pr-2 pl-1"
+          className={`flex w-full items-center gap-2 rounded-md bg-white text-left transition-colors hover:bg-neutral-50 focus:outline-none ${
+            isMobile ? "h-11.75 px-4 py-3" : "py-2 pr-2 pl-1"
           }`}
           aria-expanded={profileOpen}
           aria-label="Open profile menu"
@@ -231,10 +231,10 @@ function SidebarContent({
                 alt={displayName}
                 width={18}
                 height={18}
-                className="size-[18px] rounded-full object-cover"
+                className="size-4.5 rounded-full object-cover"
               />
             ) : (
-              <div className="flex size-[18px] items-center justify-center rounded-full bg-neutral-200 text-[9px] font-semibold text-neutral-600">
+              <div className="flex size-4.5 items-center justify-center rounded-full bg-neutral-200 text-[9px] font-semibold text-neutral-600">
                 {initials}
               </div>
             )}
@@ -242,7 +242,7 @@ function SidebarContent({
           <p className="min-w-0 flex-1 truncate text-[13px] leading-[1.1] font-medium text-[#1c1c1c]">
             {displayName}
           </p>
-          <EllipsisHorizontal className="size-[15px] shrink-0 text-[#757575]" />
+          <EllipsisHorizontal className="size-3.75 shrink-0 text-[#757575]" />
         </button>
       </div>
     </div>
@@ -290,10 +290,10 @@ export default function Sidebar({
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="ml-auto flex size-7 items-center justify-center rounded-[6px] text-[#1c1c1c] transition-colors hover:bg-white"
+          className="ml-auto flex size-7 items-center justify-center rounded-md text-[#1c1c1c] transition-colors hover:bg-white"
           aria-label="Open menu"
         >
-          <BarsThree className="size-[15px]" />
+          <BarsThree className="size-3.75" />
         </button>
         <Link
           href="/dashboard"
@@ -325,7 +325,7 @@ export default function Sidebar({
         aria-hidden="true"
       />
       <aside
-        className={`fixed inset-y-0 right-0 z-50 flex w-[300px] flex-col border-l border-[#e0e0e0] bg-[#f9f9f9] shadow-[-8px_0_24px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-out will-change-transform motion-reduce:transition-none lg:hidden ${
+        className={`fixed inset-y-0 right-0 z-50 flex w-75 flex-col border-l border-[#e0e0e0] bg-[#f9f9f9] shadow-[-8px_0_24px_rgba(0,0,0,0.08)] transition-transform duration-300 ease-out will-change-transform motion-reduce:transition-none lg:hidden ${
           mobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
         aria-hidden={!mobileOpen}

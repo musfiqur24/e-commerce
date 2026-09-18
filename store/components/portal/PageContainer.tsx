@@ -17,7 +17,7 @@ export default function PageContainer({
   return (
     <div className={`flex min-h-[calc(100vh-4rem)] flex-col bg-[#faf8f5] ${className}`}>
       <div
-        className={`mx-auto w-full max-w-[1400px] flex-1 ${contentClassName || "px-4 pt-4 pb-10 lg:px-8"}`}
+        className={`mx-auto w-full max-w-350 flex-1 ${contentClassName || "px-4 pt-4 pb-10 lg:px-8"}`}
       >
         {children}
       </div>

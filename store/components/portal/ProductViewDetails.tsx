@@ -99,7 +99,7 @@ export default function ProductViewDetails({
                 ))}
               </div>
 
-              <h2 className="text-2xl font-normal leading-[1.25] tracking-[-0.2304px] text-[#1c1c1c]">
+              <h2 className="text-2xl font-normal leading-tight tracking-[-0.2304px] text-[#1c1c1c]">
                 {product.name}
               </h2>
 

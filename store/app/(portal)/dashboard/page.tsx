@@ -26,7 +26,7 @@ export default async function DashboardPage() {
 
       {/* ── Hero ──────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-[#f0ece5]">
-        <div className="mx-auto flex max-w-[1400px] flex-col-reverse items-center gap-0 px-6 lg:flex-row lg:px-8">
+        <div className="mx-auto flex max-w-350 flex-col-reverse items-center gap-0 px-6 lg:flex-row lg:px-8">
 
           {/* Text side */}
           <div className="flex-1 py-10 lg:py-16">
@@ -71,8 +71,8 @@ export default async function DashboardPage() {
           </div>
 
           {/* Image side — homepage.webp */}
-          <div className="relative w-full py-4 lg:w-[560px] lg:shrink-0 lg:py-6">
-            <div className="relative h-[260px] w-full overflow-hidden rounded-2xl shadow-sm sm:h-[340px] lg:h-[400px]">
+          <div className="relative w-full py-4 lg:w-140 lg:shrink-0 lg:py-6">
+            <div className="relative h-65 w-full overflow-hidden rounded-2xl shadow-sm sm:h-85 lg:h-100">
               <Image
                 src="/assets/homepage.webp"
                 alt="Posora Collection"
@@ -88,7 +88,7 @@ export default async function DashboardPage() {
 
       {/* ── Category Circles ──────────────────────────────────────────── */}
       <section className="border-b border-[#e5e0d8] bg-white py-8">
-        <div className="mx-auto max-w-[1400px] px-6 lg:px-8">
+        <div className="mx-auto max-w-350 px-6 lg:px-8">
           <div className="flex gap-6 overflow-x-auto pb-1 lg:grid lg:grid-cols-6 lg:overflow-visible">
             {categories.map((cat) => (
               <Link
@@ -96,7 +96,7 @@ export default async function DashboardPage() {
                 href={cat.href}
                 className="group flex shrink-0 flex-col items-center gap-2.5"
               >
-                <div className="flex size-16 items-center justify-center rounded-full border-2 border-[#e5e0d8] bg-[#faf8f5] text-2xl shadow-sm transition-all group-hover:border-[#c8860a] group-hover:bg-white group-hover:shadow-md lg:size-[72px] lg:text-3xl">
+                <div className="flex size-16 items-center justify-center rounded-full border-2 border-[#e5e0d8] bg-[#faf8f5] text-2xl shadow-sm transition-all group-hover:border-[#c8860a] group-hover:bg-white group-hover:shadow-md lg:size-18 lg:text-3xl">
                   {cat.emoji}
                 </div>
                 <span className="text-[12px] font-semibold text-[#3a3a3a] group-hover:text-[#c8860a]">
@@ -109,7 +109,7 @@ export default async function DashboardPage() {
       </section>
 
       {/* ── New Arrivals CTA ──────────────────────────────────────────── */}
-      <section className="mx-auto max-w-[1400px] px-6 py-10 lg:px-8">
+      <section className="mx-auto max-w-350 px-6 py-10 lg:px-8">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-[20px] font-extrabold text-[#1a1a1a]">New Arrivals</h2>
           <Link

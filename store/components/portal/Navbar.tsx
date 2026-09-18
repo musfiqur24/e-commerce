@@ -87,7 +87,7 @@ export default function Navbar({ user, logoSrc }: NavbarProps) {
     <>
       {/* ── Main navbar ──────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 w-full border-b border-[#e5e0d8] bg-[#faf8f5] shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
-        <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-4 lg:px-8">
+        <div className="mx-auto flex h-16 max-w-350 items-center justify-between px-4 lg:px-8">
 
           {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-3 shrink-0">
@@ -136,7 +136,7 @@ export default function Navbar({ user, logoSrc }: NavbarProps) {
                   <span className={isCart && cartCount > 0 ? "ml-1" : ""}>{label}</span>
                   {/* Active amber underline */}
                   <span
-                    className={`absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-[#c8860a] transition-all duration-200 ${
+                    className={`absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-[#c8860a] transition-all duration-200 ${
                       active ? "opacity-100" : "opacity-0 group-hover:opacity-30"
                     }`}
                   />
@@ -171,7 +171,7 @@ export default function Navbar({ user, logoSrc }: NavbarProps) {
                     </span>
                   )}
                 </div>
-                <span className="max-w-[120px] truncate">{displayName}</span>
+                <span className="max-w-30 truncate">{displayName}</span>
                 <svg className="size-3.5 text-[#6b6b6b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
@@ -237,7 +237,7 @@ export default function Navbar({ user, logoSrc }: NavbarProps) {
 
       {/* ── Mobile drawer ────────────────────────────────────────────── */}
       <aside
-        className={`fixed inset-y-0 right-0 z-50 flex w-[300px] flex-col bg-[#faf8f5] shadow-[-8px_0_32px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out lg:hidden ${
+        className={`fixed inset-y-0 right-0 z-50 flex w-75 flex-col bg-[#faf8f5] shadow-[-8px_0_32px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out lg:hidden ${
           mobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
         aria-hidden={!mobileOpen}

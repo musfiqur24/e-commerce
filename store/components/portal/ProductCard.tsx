@@ -47,7 +47,7 @@ export default function ProductCard({ product, onViewDetails, onAddToCart }: Pro
       {/* Product Info */}
       <div className="flex w-full flex-1 flex-col justify-between gap-4">
         <div className="flex-1">
-          <h3 className="text-2xl font-normal leading-[1.25] tracking-[-0.2304px] text-[#1c1c1c]">{product.name}</h3>
+          <h3 className="text-2xl font-normal leading-tight tracking-[-0.2304px] text-[#1c1c1c]">{product.name}</h3>
           <p className="mt-0.5 line-clamp-2 text-[13px] font-normal leading-[1.6] text-[#757575]">{product.description}</p>
           {message && <p role="status" className="mt-2 text-sm font-medium text-amber-700">{message}</p>}
         </div>

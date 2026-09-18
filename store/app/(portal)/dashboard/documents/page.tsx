@@ -17,7 +17,7 @@ export default function DocumentsPage() {
       width: '36%',
       align: 'left',
       render: (value) => (
-        <span className="text-lg font-medium leading-[1.25] tracking-[-0.1728px] text-[#1c1c1c]">
+        <span className="text-lg font-medium leading-tight tracking-[-0.1728px] text-[#1c1c1c]">
           {String(value ?? '')}
         </span>
       ),
@@ -109,16 +109,16 @@ export default function DocumentsPage() {
                     key={doc.id}
                     className="flex flex-col gap-4 rounded-lg bg-white p-3 shadow-[0_0_0_1px_rgba(0,0,0,0.08),0_1px_2px_-1px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.1)]"
                   >
-                    <h4 className="text-lg font-medium leading-[1.25] tracking-[-0.1728px] text-[#1c1c1c]">
+                    <h4 className="text-lg font-medium leading-tight tracking-[-0.1728px] text-[#1c1c1c]">
                       {doc.name}
                     </h4>
 
                     <div className="border-y border-[#e0e0e0]">
-                      <div className="flex h-[38px] items-center justify-between text-sm font-normal leading-[1.6] text-[#757575]">
+                      <div className="flex h-9.5 items-center justify-between text-sm font-normal leading-[1.6] text-[#757575]">
                         <span>Category</span>
                         <span className="text-right">{doc.category}</span>
                       </div>
-                      <div className="flex h-[38px] items-center justify-between border-t border-[#e0e0e0] text-sm font-normal leading-[1.6] text-[#757575]">
+                      <div className="flex h-9.5 items-center justify-between border-t border-[#e0e0e0] text-sm font-normal leading-[1.6] text-[#757575]">
                         <span>Date Added</span>
                         <span className="text-right">{doc.dateAdded}</span>
                       </div>
