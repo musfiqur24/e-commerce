@@ -51,9 +51,9 @@ services:
       # ── Redis ──────────────────────────────────────────────────────────────
       REDIS_URL: redis://redis:6379
       STRIPE_API_KEY: ${STRIPE_API_KEY}
-      STRIPE_WEBHOOK_SECRET:  ${STRIPE_WEBHOOK_SECRET}
-      PORTAL_REGION_ID: reg_01M2NY65HHC1D7AAMSMCW4SSZX
-      PORTAL_SALES_CHANNEL_ID: sc_01M2MA2BNBCNYAQEH0VW5H0QZH
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      PORTAL_REGION_ID: ${PORTAL_REGION_ID}
+      PORTAL_SALES_CHANNEL_ID: ${PORTAL_SALES_CHANNEL_ID}
 
       # ── CORS (update domains when deploying) ───────────────────────────────
       STORE_CORS: "http://localhost:3000,http://localhost:3001"
