@@ -453,7 +453,7 @@ export default function ProductViewDetails({
                                 aria-label={`Color: ${color}`}
                                 title={color}
                                 onClick={() => handleColorChange(color)}
-                                className={`flex size-7 items-center justify-center rounded-full p-[2px] transition-all focus:outline-hidden ${
+                                className={`flex size-7 items-center justify-center rounded-full p-0.5 transition-all focus:outline-hidden ${
                                   isSelected
                                     ? 'border border-neutral-900'
                                     : 'border border-transparent hover:border-neutral-300'
